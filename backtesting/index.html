@@ -346,6 +346,10 @@ html.light .cc { color:#7f1d1d }
   <div class="fsep"></div>
   <div class="fg">
     <select id="f-i"  class="fsel" onchange="render()"><option value="">All instruments</option></select>
+    <select id="f-tf" class="fsel" onchange="render()">
+      <option value="">All timeframes</option>
+      <option>1m</option><option>5m</option><option>15m</option><option>1H</option><option>4H</option>
+    </select>
     <select id="f-kz" class="fsel" onchange="render()">
       <option value="">All kill zones</option>
       <option>London Open</option><option>NY AM</option><option>NY Lunch</option><option>NY PM</option>
@@ -455,12 +459,13 @@ function filtered(){
   const s=document.getElementById('f-s').value, e=document.getElementById('f-e').value;
   const fi=document.getElementById('f-i').value, fk=document.getElementById('f-kz').value;
   const fn=document.getElementById('f-n').value, fd=document.getElementById('f-d').value;
-  const fh=document.getElementById('f-htf').value;
+  const fh=document.getElementById('f-htf').value, ftf=document.getElementById('f-tf').value;
   return ALL.filter(r=>{
     const d=r['Session Date']||'';
     if(s&&d<s) return false;
     if(e&&d>e) return false;
     if(fi&&r.Instrument!==fi) return false;
+    if(ftf&&r.Timeframe!==ftf) return false;
     if(fk&&r['Kill Zone']!==fk) return false;
     if(fn==='none'&&r['News Day']!=='None') return false;
     if(fn==='red'&&!['Red News','Red + Orange'].includes(r['News Day'])) return false;
@@ -476,10 +481,11 @@ function updatePills(){
   const s=document.getElementById('f-s').value, e=document.getElementById('f-e').value;
   const fi=document.getElementById('f-i').value, fk=document.getElementById('f-kz').value;
   const fn=document.getElementById('f-n').value, fd=document.getElementById('f-d').value;
-  const fh=document.getElementById('f-htf').value;
+  const fh=document.getElementById('f-htf').value, ftf=document.getElementById('f-tf').value;
   const pills=[];
   if(s||e) pills.push({l:(s||'…')+' → '+(e||'…'), c:()=>{ document.getElementById('f-s').value=''; document.getElementById('f-e').value=''; setPre('all'); }});
   if(fi)   pills.push({l:fi,    c:()=>{ document.getElementById('f-i').value='';   render(); }});
+  if(ftf)  pills.push({l:ftf,   c:()=>{ document.getElementById('f-tf').value='';  render(); }});
   if(fk)   pills.push({l:fk,    c:()=>{ document.getElementById('f-kz').value='';  render(); }});
   if(fn)   pills.push({l:{none:'No news',red:'Red news',any:'Any news'}[fn], c:()=>{ document.getElementById('f-n').value=''; render(); }});
   if(fd)   pills.push({l:fd,    c:()=>{ document.getElementById('f-d').value='';   render(); }});
