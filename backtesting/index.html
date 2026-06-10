@@ -43,26 +43,26 @@ html.dark, @media (prefers-color-scheme: dark) { :root:not(.light) {
 
 /* ── LIGHT ───────────────────────────────────── */
 html.light, @media (prefers-color-scheme: light) { :root:not(.dark) {
-  --bg:     #f2f4f8;
+  --bg:     #f0f2f7;
   --bg2:    #ffffff;
   --s1:     #ffffff;
-  --s2:     #f7f8fb;
-  --s3:     #edf0f5;
-  --border: rgba(0,0,0,0.08);
-  --bdr2:   rgba(0,0,0,0.14);
-  --text:   #111827;
-  --text2:  #374151;
-  --text3:  #6b7280;
+  --s2:     #f5f7fb;
+  --s3:     #e8ecf4;
+  --border: rgba(0,0,0,0.09);
+  --bdr2:   rgba(0,0,0,0.16);
+  --text:   #0f172a;
+  --text2:  #1e293b;
+  --text3:  #475569;
   --accent: #2563eb;
   --ac2:    #1d4ed8;
-  --green:  #16a34a;
-  --green2: rgba(22,163,74,0.10);
-  --red:    #dc2626;
-  --red2:   rgba(220,38,38,0.10);
-  --amber:  #b45309;
-  --amber2: rgba(180,83,9,0.10);
+  --green:  #15803d;
+  --green2: rgba(21,128,61,0.10);
+  --red:    #b91c1c;
+  --red2:   rgba(185,28,28,0.10);
+  --amber:  #92400e;
+  --amber2: rgba(146,64,14,0.10);
   --blue2:  rgba(37,99,235,0.10);
-  --purple: #7c3aed;
+  --purple: #6d28d9;
   --theme-icon: '🌙';
 }}
 
@@ -101,11 +101,11 @@ body {
   font-size:17px; flex-shrink:0;
 }
 .hdr-title { font-size:14.5px; font-weight:600; letter-spacing:-.02em; line-height:1.2; color:var(--text) }
-.hdr-sub   { font-size:12px; color:var(--text3); margin-top:1px }
+.hdr-sub   { font-size:12px; color:var(--text2); margin-top:1px }
 
 .hdr-r { display:flex; align-items:center; gap:8px }
 #last-upd {
-  font-size:12px; color:var(--text2);
+  font-size:12px; color:var(--text);
   background:var(--s1); border:1px solid var(--border);
   padding:4px 12px; border-radius:99px;
   white-space:nowrap; display:flex; align-items:center; gap:6px;
@@ -134,7 +134,7 @@ body {
 }
 .fg { display:flex; align-items:center; gap:6px }
 /* filter labels — now text2 instead of text3 */
-.fl { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap }
+.fl { font-size:12px; font-weight:500; color:var(--text2); text-transform:uppercase; letter-spacing:.05em; white-space:nowrap }
 .fsel,.fdate {
   font-size:12.5px; padding:5px 9px; height:30px;
   border:1px solid var(--bdr2); border-radius:8px;
@@ -147,7 +147,7 @@ body {
 .fsep  { width:1px; height:18px; background:var(--border); flex-shrink:0 }
 .presets { display:flex; gap:3px }
 .pb {
-  font-size:11.5px; font-weight:500; padding:4px 9px; height:28px;
+  font-size:12px; font-weight:500; padding:4px 9px; height:28px;
   border:1px solid var(--border); border-radius:6px;
   background:transparent; color:var(--text2); cursor:pointer;
   font-family:inherit; transition:all .12s; white-space:nowrap;
@@ -163,14 +163,14 @@ body {
 .pill-bar:empty { display:none; padding:0; border:none }
 .pill {
   display:flex; align-items:center; gap:4px;
-  font-size:12px; font-weight:500;
+  font-size:12.5px; font-weight:500;
   background:var(--blue2); color:var(--ac2);
   border:1px solid rgba(79,126,240,.22); border-radius:99px;
   padding:3px 10px 3px 9px; cursor:pointer;
 }
 .pill:hover { background:rgba(79,126,240,.22) }
 .pill-x { opacity:.6; font-size:14px; line-height:1 }
-.pc { font-size:12px; color:var(--text3); font-weight:500 }
+.pc { font-size:12.5px; color:var(--text2); font-weight:500 }
 
 /* ═══════════════════════════════════════════════
    MAIN / GRID
@@ -185,8 +185,8 @@ main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
 
 /* ── SECTION LABELS ──────────────────── */
 .slbl {
-  font-size:11px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.09em; color:var(--text3);
+  font-size:12px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--text2);
   margin-bottom:.65rem; display:flex; align-items:center; gap:8px;
 }
 .slbl::after { content:''; flex:1; height:1px; background:var(--border) }
@@ -202,10 +202,10 @@ main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
   display:flex; align-items:baseline; gap:6px;
   flex-wrap:wrap; color:var(--text);
 }
-/* card subtitles are now text3 but 12px minimum */
-.ct-sub { font-size:12px; font-weight:400; color:var(--text3) }
+/* card subtitles are now text2 at 12.5px minimum */
+.ct-sub { font-size:12.5px; font-weight:400; color:var(--text2) }
 /* descriptive captions below charts */
-.csub   { font-size:12px; color:var(--text3); margin-top:8px; line-height:1.55 }
+.csub   { font-size:12.5px; color:var(--text2); margin-top:8px; line-height:1.55 }
 
 /* ── KPI CARDS ───────────────────────── */
 .kpi {
@@ -216,15 +216,15 @@ main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
 .kpi:hover { border-color:var(--bdr2); transform:translateY(-1px) }
 .kpi-stripe { position:absolute; top:0; left:0; right:0; height:2px }
 .kpi-ico    { font-size:18px; margin-bottom:7px; line-height:1 }
-/* KPI label: was 10px hint → 11.5px text3 */
-.kpi-lbl    { font-size:11.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px }
+/* KPI label: 12px text2 */
+.kpi-lbl    { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px }
 .kpi-val    { font-size:30px; font-weight:700; line-height:1; letter-spacing:-.03em }
 .kpi-val.g  { color:var(--green) }
 .kpi-val.r  { color:var(--red) }
 .kpi-val.a  { color:var(--amber) }
 .kpi-val.b  { color:var(--ac2) }
-/* KPI hint: was 10.5px hint → 12px text3 */
-.kpi-hint   { font-size:12px; color:var(--text3); margin-top:5px }
+/* KPI hint: 12.5px text2 */
+.kpi-hint   { font-size:12.5px; color:var(--text2); margin-top:5px }
 .kbar       { height:3px; background:var(--s3); border-radius:99px; margin-top:8px; overflow:hidden }
 .kbar-f     { height:100%; border-radius:99px; transition:width .5s ease }
 
@@ -232,55 +232,57 @@ main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
 .cw { position:relative; width:100% }
 
 /* ── LEGEND ──────────────────────────── */
-.leg  { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:9px; font-size:12px; color:var(--text2) }
+.leg  { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:9px; font-size:12.5px; color:var(--text2) }
 .li   { display:flex; align-items:center; gap:4px; white-space:nowrap }
 .ld   { width:9px; height:9px; border-radius:2px; flex-shrink:0 }
 
 /* ── HEATMAP ─────────────────────────── */
 .hm-wrap { overflow-x:auto }
 .hmt     { border-collapse:separate; border-spacing:3px; width:100%; font-size:12px }
-/* heatmap column headers: 11px text3 */
-.hmt th  { font-size:11px; font-weight:600; color:var(--text3); text-align:center; padding:6px 10px; text-transform:uppercase; letter-spacing:.05em }
-/* heatmap row labels: 12px text2 */
-.hmt .rh { text-align:left; white-space:nowrap; font-weight:500; color:var(--text2); padding-right:14px; font-size:12px }
+/* heatmap column headers: 12px text2 */
+.hmt th  { font-size:12px; font-weight:600; color:var(--text2); text-align:center; padding:6px 10px; text-transform:uppercase; letter-spacing:.04em }
+/* heatmap row labels: 12.5px text */
+.hmt .rh { text-align:left; white-space:nowrap; font-weight:500; color:var(--text); padding-right:14px; font-size:12.5px }
 .hmt td  { padding:7px 12px; text-align:center; font-weight:700; font-size:12px; border-radius:6px; transition:transform .1s; cursor:default }
 .hmt td:not(.rh):hover { transform:scale(1.07) }
-.ca { background:rgba(78,203,113,.2);  color:#3baa58 }
-.cb { background:rgba(224,168,48,.18); color:#b57a10 }
-.cc { background:rgba(224,92,92,.17);  color:#c84040 }
-.cn { background:var(--s3); color:var(--text3); font-weight:500; font-size:11.5px }
+.ca { background:rgba(78,203,113,.2);  color:#2d9146 }
+.cb { background:rgba(224,168,48,.18); color:#9a5c08 }
+.cc { background:rgba(224,92,92,.17);  color:#b83030 }
+.cn { background:var(--s3); color:var(--text3); font-weight:500; font-size:12px }
 
-/* light-mode heatmap cell text adjustments */
-html.light .ca,
-@media(prefers-color-scheme:light){:root:not(.dark) .ca}{ color:#166534 }
-html.light .cb,
-@media(prefers-color-scheme:light){:root:not(.dark) .cb}{ color:#92400e }
-html.light .cc,
-@media(prefers-color-scheme:light){:root:not(.dark) .cc}{ color:#991b1b }
+/* light-mode heatmap cell text — standalone selectors only */
+html.light .ca { color:#14532d }
+html.light .cb { color:#78350f }
+html.light .cc { color:#7f1d1d }
+@media(prefers-color-scheme:light){
+  :root:not(.dark) .ca { color:#14532d }
+  :root:not(.dark) .cb { color:#78350f }
+  :root:not(.dark) .cc { color:#7f1d1d }
+}
 
 /* ── DATA TABLE ──────────────────────── */
-.dtbl { width:100%; border-collapse:collapse; font-size:12.5px }
+.dtbl { width:100%; border-collapse:collapse; font-size:13px }
 .dtbl th {
-  font-size:11px; font-weight:700; color:var(--text3); text-align:left;
-  padding:8px 12px; border-bottom:1px solid var(--border);
-  text-transform:uppercase; letter-spacing:.06em; cursor:pointer; user-select:none; white-space:nowrap;
+  font-size:12px; font-weight:700; color:var(--text2); text-align:left;
+  padding:9px 12px; border-bottom:1px solid var(--border);
+  text-transform:uppercase; letter-spacing:.05em; cursor:pointer; user-select:none; white-space:nowrap;
 }
 .dtbl th:hover { color:var(--text) }
-.dtbl td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle }
+.dtbl td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; font-size:13px }
 .dtbl tr:last-child td { border-bottom:none }
 .dtbl tbody tr:hover td { background:var(--s2) }
-/* sort arrows: was opacity:.3, font-size:9px → now text3 + 11px */
-.sa    { margin-left:3px; opacity:.4; font-size:11px; color:var(--text3) }
+/* sort arrows: 12px text2 */
+.sa    { margin-left:3px; opacity:.45; font-size:12px; color:var(--text2) }
 .sa.on { opacity:1; color:var(--ac2) }
 
 /* ── BADGES ──────────────────────────── */
-.bdg { display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:.03em }
+.bdg { display:inline-flex; align-items:center; font-size:12px; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:.03em }
 .ba  { background:var(--green2); color:var(--green) }
 .bb  { background:var(--amber2); color:var(--amber) }
 .bc  { background:var(--red2);   color:var(--red)   }
 .bn  { background:var(--s3);     color:var(--text3) }
 
-.tag { display:inline-flex; align-items:center; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px }
+.tag { display:inline-flex; align-items:center; font-size:12px; font-weight:600; padding:2px 8px; border-radius:99px }
 .tg  { background:var(--green2); color:var(--green) }
 .tr  { background:var(--red2);   color:var(--red)   }
 .ta  { background:var(--amber2); color:var(--amber) }
@@ -291,8 +293,8 @@ html.light .cc,
 .dbar   { height:8px; border-radius:99px; overflow:hidden; background:var(--s3); display:flex; margin:6px 0 }
 .dbar-l { background:var(--green); transition:width .5s ease }
 .dbar-r { background:var(--red);   transition:width .5s ease }
-/* direction bar legend: was 10.5px hint → 12px text2/text3 */
-.dbar-legend { display:flex; justify-content:space-between; font-size:12px }
+/* direction bar legend: 12.5px */
+.dbar-legend { display:flex; justify-content:space-between; font-size:12.5px }
 
 /* ── RING SVG ────────────────────────── */
 .ring-svg   { transform:rotate(-90deg) }
@@ -300,7 +302,7 @@ html.light .cc,
 .ring-fg    { fill:none; stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s ease }
 .ring-label { position:absolute; text-align:center; line-height:1.2 }
 .ring-val   { font-size:22px; font-weight:700; letter-spacing:-.02em }
-.ring-lbl   { font-size:11.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-top:2px }
+.ring-lbl   { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:.06em; margin-top:2px }
 
 /* ── MISC ────────────────────────────── */
 .nodata      { text-align:center; padding:2.5rem; color:var(--text3); font-size:13px }
@@ -415,8 +417,9 @@ function isDark(){
 }
 
 function updateChartDefaults(){
-  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text3').trim();
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text2').trim();
   Chart.defaults.color = textColor;
+  Chart.defaults.font.size = 12;
 }
 
 /* ═══════════════════════════════════════════
@@ -432,7 +435,7 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 const PAL  = ['#4ecb71','#e05c5c','#e0a830','#4f7ef0','#a78bfa','#38bdf8','#f472b6','#fb923c','#94a3b8','#2dd4bf'];
 
 function gc(){ return isDark()?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)' }
-function tf(){ return {size:11.5,family:"-apple-system,'Inter',sans-serif",color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()} }
+function tf(){ return {size:12,family:"-apple-system,'Inter',sans-serif",color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()} }
 function tt(){ return {
   backgroundColor:isDark()?'#141c2e':'#ffffff',
   titleColor:isDark()?'#dce3f2':'#111827',
@@ -605,7 +608,7 @@ function render(){
       <div style="width:100%;padding:0 .25rem">
         <div class="dbar-legend" style="margin-bottom:5px">
           <span style="color:var(--green);font-weight:700">↑ Long&nbsp;${S.longs}</span>
-          <span style="color:var(--text3);font-size:11.5px">${S.withSetup} setups total</span>
+          <span style="color:var(--text2);font-size:12.5px">${S.withSetup} setups total</span>
           <span style="color:var(--red);font-weight:700">${S.shorts}&nbsp;Short ↓</span>
         </div>
         <div class="dbar">
@@ -614,7 +617,7 @@ function render(){
         </div>
         <div class="dbar-legend" style="margin-top:5px">
           <span style="font-weight:700;color:var(--green)">${S.longPct}%</span>
-          <span style="color:var(--text3);font-size:11.5px">direction split</span>
+          <span style="color:var(--text2);font-size:12.5px">direction split</span>
           <span style="font-weight:700;color:var(--red)">${S.shortPct}%</span>
         </div>
       </div>
@@ -891,7 +894,7 @@ function buildPatternTable(data){
     </tr></thead>
     <tbody>${rows.map(r=>`<tr>
       <td style="font-weight:500">${r.p}</td>
-      <td>${r.n}<span style="color:var(--text3);font-size:12px">&nbsp;(${r.ws} setup${r.ws!==1?'s':''})</span></td>
+      <td>${r.n}<span style="color:var(--text2);font-size:12px">&nbsp;(${r.ws} setup${r.ws!==1?'s':''})</span></td>
       <td><span style="font-size:13px;font-weight:700;color:${r.freq>=60?'var(--green)':r.freq>=40?'var(--amber)':'var(--red)'}">${r.freq}%</span></td>
       <td style="font-weight:600;font-size:13px;color:${r.avgRR>=3?'var(--green)':r.avgRR>=2?'var(--amber)':'var(--text3)'}">${r.avgRR!=null?r.avgRR+'R':'—'}</td>
       <td style="font-weight:600;font-size:13px;color:${r.avgQ>=4?'var(--green)':r.avgQ>=3?'var(--amber)':'var(--text3)'}">${r.avgQ!=null?r.avgQ+'/5':'—'}</td>
