@@ -8,16 +8,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 /* ═══════════════════════════════════════════════
-   THEME TOKENS
-   System preference is the default; .light / .dark
-   classes on <html> allow manual override.
+   THEME TOKENS — dark is the default
+   html.light class enables light mode manually.
 ═══════════════════════════════════════════════ */
 :root {
-  color-scheme: dark light;
-}
-
-/* ── DARK (default / prefers-color-scheme: dark) ── */
-html.dark, @media (prefers-color-scheme: dark) { :root:not(.light) {
+  color-scheme: dark;
   --bg:     #0b0f1a;
   --bg2:    #10151f;
   --s1:     #141c2e;
@@ -26,8 +21,8 @@ html.dark, @media (prefers-color-scheme: dark) { :root:not(.light) {
   --border: rgba(255,255,255,0.06);
   --bdr2:   rgba(255,255,255,0.11);
   --text:   #dce3f2;
-  --text2:  #b0bdd4;   /* ↑ was --sub, now brighter  */
-  --text3:  #7a8fa8;   /* ↑ was --hint, bumped up    */
+  --text2:  #b0bdd4;
+  --text3:  #7a8fa8;
   --accent: #4f7ef0;
   --ac2:    #7fa4ff;
   --green:  #4ecb71;
@@ -38,11 +33,11 @@ html.dark, @media (prefers-color-scheme: dark) { :root:not(.light) {
   --amber2: rgba(224,168,48,0.14);
   --blue2:  rgba(79,126,240,0.13);
   --purple: #a78bfa;
-  --theme-icon: '☀️';
-}}
+}
 
-/* ── LIGHT ───────────────────────────────────── */
-html.light, @media (prefers-color-scheme: light) { :root:not(.dark) {
+/* ── LIGHT (manual override only) ────────────── */
+html.light {
+  color-scheme: light;
   --bg:     #f0f2f7;
   --bg2:    #ffffff;
   --s1:     #ffffff;
@@ -63,8 +58,7 @@ html.light, @media (prefers-color-scheme: light) { :root:not(.dark) {
   --amber2: rgba(146,64,14,0.10);
   --blue2:  rgba(37,99,235,0.10);
   --purple: #6d28d9;
-  --theme-icon: '🌙';
-}}
+}
 
 /* ═══════════════════════════════════════════════
    RESET & BASE
@@ -250,15 +244,10 @@ main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
 .cc { background:rgba(224,92,92,.17);  color:#b83030 }
 .cn { background:var(--s3); color:var(--text3); font-weight:500; font-size:12px }
 
-/* light-mode heatmap cell text — standalone selectors only */
+/* light-mode heatmap cell text */
 html.light .ca { color:#14532d }
 html.light .cb { color:#78350f }
 html.light .cc { color:#7f1d1d }
-@media(prefers-color-scheme:light){
-  :root:not(.dark) .ca { color:#14532d }
-  :root:not(.dark) .cb { color:#78350f }
-  :root:not(.dark) .cc { color:#7f1d1d }
-}
 
 /* ── DATA TABLE ──────────────────────── */
 .dtbl { width:100%; border-collapse:collapse; font-size:13px }
@@ -392,28 +381,23 @@ html.light .cc { color:#7f1d1d }
 
 <script>
 /* ═══════════════════════════════════════════
-   THEME
+   THEME — dark by default, light on demand
 ═══════════════════════════════════════════ */
 (function(){
-  const saved = localStorage.getItem('ict-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const useDark = saved ? saved === 'dark' : prefersDark;
-  document.documentElement.classList.add(useDark ? 'dark' : 'light');
+  if(localStorage.getItem('ict-theme') === 'light')
+    document.documentElement.classList.add('light');
 })();
 
 function toggleTheme(){
-  const html = document.documentElement;
-  const isDark = html.classList.contains('dark');
-  html.classList.toggle('dark', !isDark);
-  html.classList.toggle('light', isDark);
-  localStorage.setItem('ict-theme', isDark ? 'light' : 'dark');
-  document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+  const isLight = document.documentElement.classList.toggle('light');
+  localStorage.setItem('ict-theme', isLight ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
   updateChartDefaults();
   render();
 }
 
 function isDark(){
-  return document.documentElement.classList.contains('dark');
+  return !document.documentElement.classList.contains('light');
 }
 
 function updateChartDefaults(){
@@ -917,8 +901,8 @@ function sortT(c){ if(sCol===c) sDir*=-1; else{ sCol=c; sDir=-1; } buildPatternT
 
 /* ─── Set initial theme-btn icon ─────────── */
 function initThemeBtn(){
-  const dark = document.documentElement.classList.contains('dark');
-  document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+  const isLight = document.documentElement.classList.contains('light');
+  document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
 }
 
 /* ─── Init ──────────────────────────────── */
