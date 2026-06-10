@@ -7,200 +7,317 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0b0f1a;
-  --bg2:#10151f;
-  --s1:#141c2e;
-  --s2:#1a2338;
-  --s3:#1f2840;
-  --border:rgba(255,255,255,0.055);
-  --border2:rgba(255,255,255,0.1);
-  --text:#d8dff0;
-  --sub:#8592a8;
-  --hint:#3d4d66;
-  --accent:#4f7ef0;
-  --accent2:#7fa4ff;
-  --green:#4ecb71;
-  --green2:rgba(78,203,113,0.14);
-  --red:#e05c5c;
-  --red2:rgba(224,92,92,0.14);
-  --amber:#e0a830;
-  --amber2:rgba(224,168,48,0.14);
-  --blue2:rgba(79,126,240,0.13);
-  --purple:#a78bfa;
-  --r:12px;
-  --r2:8px;
+/* ═══════════════════════════════════════════════
+   THEME TOKENS
+   System preference is the default; .light / .dark
+   classes on <html> allow manual override.
+═══════════════════════════════════════════════ */
+:root {
+  color-scheme: dark light;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55;min-height:100vh}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 
-/* ── HEADER ─────────────────────────────────────── */
-#hdr{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:.75rem 1.75rem;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:200;backdrop-filter:blur(16px);
+/* ── DARK (default / prefers-color-scheme: dark) ── */
+html.dark, @media (prefers-color-scheme: dark) { :root:not(.light) {
+  --bg:     #0b0f1a;
+  --bg2:    #10151f;
+  --s1:     #141c2e;
+  --s2:     #19223a;
+  --s3:     #1f2840;
+  --border: rgba(255,255,255,0.06);
+  --bdr2:   rgba(255,255,255,0.11);
+  --text:   #dce3f2;
+  --text2:  #b0bdd4;   /* ↑ was --sub, now brighter  */
+  --text3:  #7a8fa8;   /* ↑ was --hint, bumped up    */
+  --accent: #4f7ef0;
+  --ac2:    #7fa4ff;
+  --green:  #4ecb71;
+  --green2: rgba(78,203,113,0.14);
+  --red:    #e05c5c;
+  --red2:   rgba(224,92,92,0.14);
+  --amber:  #e0a830;
+  --amber2: rgba(224,168,48,0.14);
+  --blue2:  rgba(79,126,240,0.13);
+  --purple: #a78bfa;
+  --theme-icon: '☀️';
+}}
+
+/* ── LIGHT ───────────────────────────────────── */
+html.light, @media (prefers-color-scheme: light) { :root:not(.dark) {
+  --bg:     #f2f4f8;
+  --bg2:    #ffffff;
+  --s1:     #ffffff;
+  --s2:     #f7f8fb;
+  --s3:     #edf0f5;
+  --border: rgba(0,0,0,0.08);
+  --bdr2:   rgba(0,0,0,0.14);
+  --text:   #111827;
+  --text2:  #374151;
+  --text3:  #6b7280;
+  --accent: #2563eb;
+  --ac2:    #1d4ed8;
+  --green:  #16a34a;
+  --green2: rgba(22,163,74,0.10);
+  --red:    #dc2626;
+  --red2:   rgba(220,38,38,0.10);
+  --amber:  #b45309;
+  --amber2: rgba(180,83,9,0.10);
+  --blue2:  rgba(37,99,235,0.10);
+  --purple: #7c3aed;
+  --theme-icon: '🌙';
+}}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background .2s, color .2s;
 }
-.hdr-l{display:flex;align-items:center;gap:12px}
-.hdr-logo{
-  width:34px;height:34px;
-  background:linear-gradient(135deg,#4f7ef0 0%,#8b5cf6 100%);
-  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+::-webkit-scrollbar { width: 5px; height: 5px }
+::-webkit-scrollbar-thumb { background: var(--bdr2); border-radius: 99px }
+
+/* ═══════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════ */
+#hdr {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: .8rem 1.75rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+  backdrop-filter: blur(16px);
 }
-.hdr-title{font-size:14.5px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
-.hdr-sub{font-size:11px;color:var(--sub);margin-top:1px}
-.hdr-r{display:flex;align-items:center;gap:10px}
-#last-upd{font-size:11px;color:var(--sub);background:var(--s1);border:1px solid var(--border);padding:4px 12px;border-radius:99px;white-space:nowrap;display:flex;align-items:center;gap:6px}
-.dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 7px var(--green);animation:pulse 2.4s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ── FILTER BAR ─────────────────────────────────── */
-#fbar{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:.55rem 1.75rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  position:sticky;top:57px;z-index:199;
+.hdr-l { display:flex; align-items:center; gap:12px }
+.hdr-logo {
+  width:34px; height:34px;
+  background: linear-gradient(135deg,#4f7ef0,#8b5cf6);
+  border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0;
 }
-.fg{display:flex;align-items:center;gap:6px}
-.fl{font-size:10px;font-weight:600;color:var(--hint);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
-.fsel,.fdate{
-  font-size:12px;padding:5px 9px;height:29px;
-  border:1px solid var(--border2);border-radius:var(--r2);
-  background:var(--s1);color:var(--text);cursor:pointer;outline:none;
-  font-family:inherit;transition:border-color .12s,box-shadow .12s;
+.hdr-title { font-size:14.5px; font-weight:600; letter-spacing:-.02em; line-height:1.2; color:var(--text) }
+.hdr-sub   { font-size:12px; color:var(--text3); margin-top:1px }
+
+.hdr-r { display:flex; align-items:center; gap:8px }
+#last-upd {
+  font-size:12px; color:var(--text2);
+  background:var(--s1); border:1px solid var(--border);
+  padding:4px 12px; border-radius:99px;
+  white-space:nowrap; display:flex; align-items:center; gap:6px;
 }
-.fsel:hover,.fdate:hover{border-color:var(--accent)}
-.fsel:focus,.fdate:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--blue2)}
-.fdate{width:128px;color-scheme:dark}
-.fsep{width:1px;height:16px;background:var(--border);flex-shrink:0}
-.presets{display:flex;gap:3px}
-.pb{
-  font-size:11px;font-weight:500;padding:3px 9px;height:27px;
-  border:1px solid var(--border);border-radius:6px;
-  background:transparent;color:var(--sub);cursor:pointer;
-  font-family:inherit;transition:all .12s;white-space:nowrap;
+.dot { width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 7px var(--green);animation:pulse 2.4s infinite }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* theme toggle button */
+#theme-btn {
+  width:32px; height:32px;
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:8px; cursor:pointer; font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color .15s, background .15s;
+  flex-shrink:0;
 }
-.pb:hover{background:var(--s3);color:var(--text);border-color:var(--accent)}
-.pb.on{background:var(--blue2);color:var(--accent2);border-color:var(--accent)}
-.pill-bar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:.35rem 1.75rem;background:var(--bg);border-bottom:1px solid var(--border)}
-.pill-bar:empty{display:none;padding:0;border:none}
-.pill{display:flex;align-items:center;gap:4px;font-size:11px;background:var(--blue2);color:var(--accent2);border:1px solid rgba(79,126,240,.2);border-radius:99px;padding:2px 9px 2px 8px;cursor:pointer}
-.pill:hover{background:rgba(79,126,240,.22)}
-.pc{color:var(--sub);font-size:11px}
+#theme-btn:hover { border-color:var(--accent); background:var(--s2) }
 
-/* ── LAYOUT ─────────────────────────────────────── */
-main{max-width:1140px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
-.row{display:grid;gap:14px;margin-bottom:14px}
-.row.c2{grid-template-columns:1fr 1fr}
-.row.c3{grid-template-columns:1fr 1fr 1fr}
-.row.c4{grid-template-columns:1fr 1fr 1fr 1fr}
-.row.c32{grid-template-columns:1.6fr 1fr}
-.row.c23{grid-template-columns:1fr 1.6fr}
-.mb{margin-bottom:14px}
-
-/* ── SECTION LABEL ──────────────────────────────── */
-.slbl{
-  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--hint);
-  margin-bottom:.6rem;display:flex;align-items:center;gap:8px;
+/* ═══════════════════════════════════════════════
+   FILTER BAR
+═══════════════════════════════════════════════ */
+#fbar {
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  padding:.6rem 1.75rem; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  position:sticky; top:57px; z-index:199;
 }
-.slbl::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ── CARD ───────────────────────────────────────── */
-.card{
-  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:1.15rem;
-  transition:border-color .15s;position:relative;overflow:hidden;
+.fg { display:flex; align-items:center; gap:6px }
+/* filter labels — now text2 instead of text3 */
+.fl { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap }
+.fsel,.fdate {
+  font-size:12.5px; padding:5px 9px; height:30px;
+  border:1px solid var(--bdr2); border-radius:8px;
+  background:var(--s1); color:var(--text); cursor:pointer; outline:none;
+  font-family:inherit; transition:border-color .12s, box-shadow .12s;
 }
-.card:hover{border-color:var(--border2)}
-.ct{font-size:12.5px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;color:var(--text)}
-.ct-sub{font-size:11px;font-weight:400;color:var(--sub);margin-left:6px}
-.csub{font-size:10.5px;color:var(--hint);margin-top:7px;line-height:1.5}
-
-/* ── KPI CARDS ──────────────────────────────────── */
-.kpi{
-  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
-  padding:1.1rem 1.15rem;position:relative;overflow:hidden;
-  transition:border-color .15s,transform .15s;
+.fsel:hover,.fdate:hover { border-color:var(--accent) }
+.fsel:focus,.fdate:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--blue2) }
+.fdate { width:130px; color-scheme:dark light }
+.fsep  { width:1px; height:18px; background:var(--border); flex-shrink:0 }
+.presets { display:flex; gap:3px }
+.pb {
+  font-size:11.5px; font-weight:500; padding:4px 9px; height:28px;
+  border:1px solid var(--border); border-radius:6px;
+  background:transparent; color:var(--text2); cursor:pointer;
+  font-family:inherit; transition:all .12s; white-space:nowrap;
 }
-.kpi:hover{border-color:var(--border2);transform:translateY(-1px)}
-.kpi-stripe{position:absolute;top:0;left:0;right:0;height:2px}
-.kpi-ico{font-size:18px;margin-bottom:7px;line-height:1}
-.kpi-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
-.kpi-val{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.03em}
-.kpi-val.g{color:var(--green)}.kpi-val.r{color:var(--red)}.kpi-val.a{color:var(--amber)}.kpi-val.b{color:var(--accent2)}.kpi-val.p{color:var(--purple)}
-.kpi-hint{font-size:10.5px;color:var(--hint);margin-top:5px}
-.kbar{height:3px;background:var(--s3);border-radius:99px;margin-top:8px;overflow:hidden}
-.kbar-f{height:100%;border-radius:99px;transition:width .5s ease}
+.pb:hover { background:var(--s3); color:var(--text); border-color:var(--accent) }
+.pb.on    { background:var(--blue2); color:var(--ac2); border-color:var(--accent) }
 
-/* ── CHART WRAP ─────────────────────────────────── */
-.cw{position:relative;width:100%}
-
-/* ── LEGEND ─────────────────────────────────────── */
-.leg{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;font-size:11px;color:var(--sub)}
-.li{display:flex;align-items:center;gap:3px;white-space:nowrap}
-.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-
-/* ── HEATMAP ────────────────────────────────────── */
-.hm-wrap{overflow-x:auto}
-.hmt{border-collapse:separate;border-spacing:3px;width:100%;font-size:11.5px}
-.hmt th{font-size:10px;font-weight:600;color:var(--sub);text-align:center;padding:5px 8px;text-transform:uppercase;letter-spacing:.05em}
-.hmt .rh{text-align:left;white-space:nowrap;font-weight:400;color:var(--sub);padding-right:14px;font-size:11px}
-.hmt td{padding:7px 10px;text-align:center;font-weight:700;font-size:12px;border-radius:6px;transition:transform .1s;cursor:default}
-.hmt td:not(.rh):hover{transform:scale(1.08)}
-.ca{background:rgba(78,203,113,.2);color:#6ddb8e}
-.cb{background:rgba(224,168,48,.18);color:#f0c060}
-.cc{background:rgba(224,92,92,.17);color:#f08080}
-.cn{background:var(--s3);color:var(--hint);font-weight:400;font-size:11px}
-
-/* ── DATA TABLE ─────────────────────────────────── */
-.dtbl{width:100%;border-collapse:collapse;font-size:12px}
-.dtbl th{
-  font-size:10px;font-weight:700;color:var(--sub);text-align:left;
-  padding:7px 12px;border-bottom:1px solid var(--border);
-  text-transform:uppercase;letter-spacing:.06em;cursor:pointer;user-select:none;white-space:nowrap;
+/* ── ACTIVE FILTER PILLS ─────────────── */
+.pill-bar {
+  display:flex; flex-wrap:wrap; gap:5px; align-items:center;
+  padding:.4rem 1.75rem; background:var(--bg); border-bottom:1px solid var(--border);
 }
-.dtbl th:hover{color:var(--text)}
-.dtbl td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
-.dtbl tr:last-child td{border-bottom:none}
-.dtbl tbody tr:hover td{background:var(--s2)}
-.sa{margin-left:3px;opacity:.3;font-size:9px}
-.sa.on{opacity:1;color:var(--accent2)}
+.pill-bar:empty { display:none; padding:0; border:none }
+.pill {
+  display:flex; align-items:center; gap:4px;
+  font-size:12px; font-weight:500;
+  background:var(--blue2); color:var(--ac2);
+  border:1px solid rgba(79,126,240,.22); border-radius:99px;
+  padding:3px 10px 3px 9px; cursor:pointer;
+}
+.pill:hover { background:rgba(79,126,240,.22) }
+.pill-x { opacity:.6; font-size:14px; line-height:1 }
+.pc { font-size:12px; color:var(--text3); font-weight:500 }
 
-/* ── BADGES / PILLS ─────────────────────────────── */
-.bdg{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:.04em}
-.ba{background:var(--green2);color:var(--green)}.bb{background:var(--amber2);color:var(--amber)}.bc{background:var(--red2);color:var(--red)}.bn{background:rgba(100,116,139,.12);color:var(--sub)}
-.tag{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px}
-.tg{background:var(--green2);color:var(--green)}.tr{background:var(--red2);color:var(--red)}.ta{background:var(--amber2);color:var(--amber)}.tb{background:var(--blue2);color:var(--accent2)}.tn{background:rgba(100,116,139,.1);color:var(--sub)}
+/* ═══════════════════════════════════════════════
+   MAIN / GRID
+═══════════════════════════════════════════════ */
+main { max-width:1140px; margin:0 auto; padding:1.5rem 1.5rem 5rem }
+.row  { display:grid; gap:14px; margin-bottom:14px }
+.c2   { grid-template-columns:1fr 1fr }
+.c3   { grid-template-columns:1fr 1fr 1fr }
+.c4   { grid-template-columns:1fr 1fr 1fr 1fr }
+.c32  { grid-template-columns:1.6fr 1fr }
+.mb   { margin-bottom:14px }
 
-/* ── PROGRESS RING ──────────────────────────────── */
-.ring-wrap{display:flex;align-items:center;justify-content:center;padding:.5rem 0}
-.ring-svg{transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:var(--s3);stroke-width:8}
-.ring-fg{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
-.ring-label{position:absolute;text-align:center;line-height:1.2}
-.ring-val{font-size:22px;font-weight:700;letter-spacing:-.02em}
-.ring-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+/* ── SECTION LABELS ──────────────────── */
+.slbl {
+  font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.09em; color:var(--text3);
+  margin-bottom:.65rem; display:flex; align-items:center; gap:8px;
+}
+.slbl::after { content:''; flex:1; height:1px; background:var(--border) }
 
-/* ── DIRECTION BAR ──────────────────────────────── */
-.dbar{height:8px;border-radius:99px;overflow:hidden;background:var(--s3);display:flex;margin:6px 0}
-.dbar-l{background:var(--green);transition:width .5s ease}
-.dbar-r{background:var(--red);transition:width .5s ease}
-.dbar-legend{display:flex;justify-content:space-between;font-size:10.5px}
+/* ── CARD ────────────────────────────── */
+.card {
+  background:var(--s1); border:1px solid var(--border); border-radius:12px;
+  padding:1.2rem; transition:border-color .15s; position:relative; overflow:hidden;
+}
+.card:hover { border-color:var(--bdr2) }
+.ct {
+  font-size:13px; font-weight:600; margin-bottom:.85rem;
+  display:flex; align-items:baseline; gap:6px;
+  flex-wrap:wrap; color:var(--text);
+}
+/* card subtitles are now text3 but 12px minimum */
+.ct-sub { font-size:12px; font-weight:400; color:var(--text3) }
+/* descriptive captions below charts */
+.csub   { font-size:12px; color:var(--text3); margin-top:8px; line-height:1.55 }
 
-/* ── MISC ───────────────────────────────────────── */
-.nodata{text-align:center;padding:2.5rem;color:var(--hint);font-size:12px}
-.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65vh;gap:14px}
-.spin{width:32px;height:32px;border:2.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.errbox{background:var(--red2);color:var(--red);border:1px solid rgba(224,92,92,.2);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1rem;font-size:13px}
-.divider{height:1px;background:var(--border);margin:1.25rem 0}
+/* ── KPI CARDS ───────────────────────── */
+.kpi {
+  background:var(--s1); border:1px solid var(--border); border-radius:12px;
+  padding:1.1rem 1.15rem; position:relative; overflow:hidden;
+  transition:border-color .15s, transform .15s;
+}
+.kpi:hover { border-color:var(--bdr2); transform:translateY(-1px) }
+.kpi-stripe { position:absolute; top:0; left:0; right:0; height:2px }
+.kpi-ico    { font-size:18px; margin-bottom:7px; line-height:1 }
+/* KPI label: was 10px hint → 11.5px text3 */
+.kpi-lbl    { font-size:11.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px }
+.kpi-val    { font-size:30px; font-weight:700; line-height:1; letter-spacing:-.03em }
+.kpi-val.g  { color:var(--green) }
+.kpi-val.r  { color:var(--red) }
+.kpi-val.a  { color:var(--amber) }
+.kpi-val.b  { color:var(--ac2) }
+/* KPI hint: was 10.5px hint → 12px text3 */
+.kpi-hint   { font-size:12px; color:var(--text3); margin-top:5px }
+.kbar       { height:3px; background:var(--s3); border-radius:99px; margin-top:8px; overflow:hidden }
+.kbar-f     { height:100%; border-radius:99px; transition:width .5s ease }
 
-@media(max-width:900px){.row.c3,.row.c4{grid-template-columns:1fr 1fr}.row.c32,.row.c23{grid-template-columns:1fr}}
-@media(max-width:600px){main{padding:1rem}#hdr,#fbar{padding-left:1rem;padding-right:1rem}.row.c2,.row.c3,.row.c4{grid-template-columns:1fr}#fbar{flex-direction:column;align-items:flex-start}.fdate{width:115px}}
+/* ── CHART WRAP ──────────────────────── */
+.cw { position:relative; width:100% }
+
+/* ── LEGEND ──────────────────────────── */
+.leg  { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:9px; font-size:12px; color:var(--text2) }
+.li   { display:flex; align-items:center; gap:4px; white-space:nowrap }
+.ld   { width:9px; height:9px; border-radius:2px; flex-shrink:0 }
+
+/* ── HEATMAP ─────────────────────────── */
+.hm-wrap { overflow-x:auto }
+.hmt     { border-collapse:separate; border-spacing:3px; width:100%; font-size:12px }
+/* heatmap column headers: 11px text3 */
+.hmt th  { font-size:11px; font-weight:600; color:var(--text3); text-align:center; padding:6px 10px; text-transform:uppercase; letter-spacing:.05em }
+/* heatmap row labels: 12px text2 */
+.hmt .rh { text-align:left; white-space:nowrap; font-weight:500; color:var(--text2); padding-right:14px; font-size:12px }
+.hmt td  { padding:7px 12px; text-align:center; font-weight:700; font-size:12px; border-radius:6px; transition:transform .1s; cursor:default }
+.hmt td:not(.rh):hover { transform:scale(1.07) }
+.ca { background:rgba(78,203,113,.2);  color:#3baa58 }
+.cb { background:rgba(224,168,48,.18); color:#b57a10 }
+.cc { background:rgba(224,92,92,.17);  color:#c84040 }
+.cn { background:var(--s3); color:var(--text3); font-weight:500; font-size:11.5px }
+
+/* light-mode heatmap cell text adjustments */
+html.light .ca,
+@media(prefers-color-scheme:light){:root:not(.dark) .ca}{ color:#166534 }
+html.light .cb,
+@media(prefers-color-scheme:light){:root:not(.dark) .cb}{ color:#92400e }
+html.light .cc,
+@media(prefers-color-scheme:light){:root:not(.dark) .cc}{ color:#991b1b }
+
+/* ── DATA TABLE ──────────────────────── */
+.dtbl { width:100%; border-collapse:collapse; font-size:12.5px }
+.dtbl th {
+  font-size:11px; font-weight:700; color:var(--text3); text-align:left;
+  padding:8px 12px; border-bottom:1px solid var(--border);
+  text-transform:uppercase; letter-spacing:.06em; cursor:pointer; user-select:none; white-space:nowrap;
+}
+.dtbl th:hover { color:var(--text) }
+.dtbl td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle }
+.dtbl tr:last-child td { border-bottom:none }
+.dtbl tbody tr:hover td { background:var(--s2) }
+/* sort arrows: was opacity:.3, font-size:9px → now text3 + 11px */
+.sa    { margin-left:3px; opacity:.4; font-size:11px; color:var(--text3) }
+.sa.on { opacity:1; color:var(--ac2) }
+
+/* ── BADGES ──────────────────────────── */
+.bdg { display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:.03em }
+.ba  { background:var(--green2); color:var(--green) }
+.bb  { background:var(--amber2); color:var(--amber) }
+.bc  { background:var(--red2);   color:var(--red)   }
+.bn  { background:var(--s3);     color:var(--text3) }
+
+.tag { display:inline-flex; align-items:center; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px }
+.tg  { background:var(--green2); color:var(--green) }
+.tr  { background:var(--red2);   color:var(--red)   }
+.ta  { background:var(--amber2); color:var(--amber) }
+.tb  { background:var(--blue2);  color:var(--ac2)   }
+.tn  { background:var(--s3);     color:var(--text3) }
+
+/* ── DIRECTION BAR ───────────────────── */
+.dbar   { height:8px; border-radius:99px; overflow:hidden; background:var(--s3); display:flex; margin:6px 0 }
+.dbar-l { background:var(--green); transition:width .5s ease }
+.dbar-r { background:var(--red);   transition:width .5s ease }
+/* direction bar legend: was 10.5px hint → 12px text2/text3 */
+.dbar-legend { display:flex; justify-content:space-between; font-size:12px }
+
+/* ── RING SVG ────────────────────────── */
+.ring-svg   { transform:rotate(-90deg) }
+.ring-bg    { fill:none; stroke:var(--s3); stroke-width:8 }
+.ring-fg    { fill:none; stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s ease }
+.ring-label { position:absolute; text-align:center; line-height:1.2 }
+.ring-val   { font-size:22px; font-weight:700; letter-spacing:-.02em }
+.ring-lbl   { font-size:11.5px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-top:2px }
+
+/* ── MISC ────────────────────────────── */
+.nodata      { text-align:center; padding:2.5rem; color:var(--text3); font-size:13px }
+.loading-wrap{ display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:65vh; gap:14px }
+.spin        { width:32px; height:32px; border:2.5px solid var(--bdr2); border-top-color:var(--accent); border-radius:50%; animation:sp .7s linear infinite }
+@keyframes sp{ to{transform:rotate(360deg)} }
+.errbox      { background:var(--red2); color:var(--red); border:1px solid rgba(224,92,92,.22); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1rem; font-size:13px }
+.divider     { height:1px; background:var(--border); margin:1.25rem 0 }
+
+/* ── RESPONSIVE ──────────────────────── */
+@media(max-width:900px){ .c3,.c4{grid-template-columns:1fr 1fr} .c32{grid-template-columns:1fr} }
+@media(max-width:600px){ main{padding:1rem} #hdr,#fbar{padding-left:1rem;padding-right:1rem} .c2,.c3,.c4{grid-template-columns:1fr} #fbar{flex-direction:column;align-items:flex-start} .fdate{width:116px} }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ═══ HEADER ═══════════════════════════════ -->
 <div id="hdr">
   <div class="hdr-l">
     <div class="hdr-logo">📈</div>
@@ -211,10 +328,11 @@ main{max-width:1140px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
   </div>
   <div class="hdr-r">
     <div id="last-upd"><span class="dot"></span>Loading&hellip;</div>
+    <button id="theme-btn" onclick="toggleTheme()" title="Toggle light / dark mode" aria-label="Toggle colour theme">🌙</button>
   </div>
 </div>
 
-<!-- FILTER BAR -->
+<!-- ═══ FILTER BAR ═══════════════════════════ -->
 <div id="fbar">
   <div class="fg">
     <span class="fl">Period</span>
@@ -249,7 +367,8 @@ main{max-width:1140px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
     </select>
     <select id="f-d" class="fsel" onchange="render()">
       <option value="">All days</option>
-      <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option>
+      <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+      <option>Thursday</option><option>Friday</option>
     </select>
     <select id="f-htf" class="fsel" onchange="render()">
       <option value="">HTF: all</option>
@@ -261,202 +380,255 @@ main{max-width:1140px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
 
 <div class="pill-bar" id="pills"></div>
 
+<!-- ═══ APP ROOT ══════════════════════════════ -->
 <main id="app">
-  <div class="loading-wrap"><div class="spin"></div><div style="color:var(--sub);font-size:13px">Loading backtest_log.csv&hellip;</div></div>
+  <div class="loading-wrap">
+    <div class="spin"></div>
+    <div style="color:var(--text3);font-size:13.5px">Loading backtest_log.csv&hellip;</div>
+  </div>
 </main>
 
 <script>
-const CSV='./backtest_log.csv';
-const PATS=['Asia Low + London Low Swept','Asia High + London High Swept','Both Sessions Swept Low','Both Sessions Swept High','London Low Only','London High Only','Asia Low Swept Only','Asia High Swept Only','No Sweeps'];
-const KZS=['London Open','NY AM','NY Lunch','NY PM'];
-const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
-const PAL=['#4ecb71','#e05c5c','#e0a830','#4f7ef0','#a78bfa','#38bdf8','#f472b6','#fb923c','#64748b','#2dd4bf'];
-const GC='rgba(255,255,255,0.035)';
-const TF={size:11,family:"-apple-system,'Inter',sans-serif",color:'#8592a8'};
-const TT={backgroundColor:'#141c2e',titleColor:'#d8dff0',bodyColor:'#8592a8',borderColor:'rgba(255,255,255,.07)',borderWidth:1,padding:10,cornerRadius:6};
-const CDEFS={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},animation:{duration:350}};
+/* ═══════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════ */
+(function(){
+  const saved = localStorage.getItem('ict-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const useDark = saved ? saved === 'dark' : prefersDark;
+  document.documentElement.classList.add(useDark ? 'dark' : 'light');
+})();
 
-let ALL=[],charts={},sCol='freq',sDir=-1,_clears=[];
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.classList.contains('dark');
+  html.classList.toggle('dark', !isDark);
+  html.classList.toggle('light', isDark);
+  localStorage.setItem('ict-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+  updateChartDefaults();
+  render();
+}
 
-function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
-function pct(n,d){return d?Math.round(n/d*100):0;}
-function avg(a){return a.length?+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(2):null;}
-function today(){return new Date().toISOString().slice(0,10);}
-function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function isDark(){
+  return document.documentElement.classList.contains('dark');
+}
 
-/* ── PRESETS ───────────────────────── */
+function updateChartDefaults(){
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text3').trim();
+  Chart.defaults.color = textColor;
+}
+
+/* ═══════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════ */
+const CSV  = './backtest_log.csv';
+const PATS = ['Asia Low + London Low Swept','Asia High + London High Swept',
+              'Both Sessions Swept Low','Both Sessions Swept High',
+              'London Low Only','London High Only',
+              'Asia Low Swept Only','Asia High Swept Only','No Sweeps'];
+const KZS  = ['London Open','NY AM','NY Lunch','NY PM'];
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const PAL  = ['#4ecb71','#e05c5c','#e0a830','#4f7ef0','#a78bfa','#38bdf8','#f472b6','#fb923c','#94a3b8','#2dd4bf'];
+
+function gc(){ return isDark()?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)' }
+function tf(){ return {size:11.5,family:"-apple-system,'Inter',sans-serif",color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()} }
+function tt(){ return {
+  backgroundColor:isDark()?'#141c2e':'#ffffff',
+  titleColor:isDark()?'#dce3f2':'#111827',
+  bodyColor:isDark()?'#b0bdd4':'#374151',
+  borderColor:isDark()?'rgba(255,255,255,.08)':'rgba(0,0,0,.1)',
+  borderWidth:1, padding:10, cornerRadius:6,
+}}
+const CDEFS = { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, animation:{duration:350} };
+
+let ALL=[], charts={}, sCol='freq', sDir=-1, _clears=[];
+
+function dc(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+function pct(n,d){ return d ? Math.round(n/d*100) : 0 }
+function avg(a){ return a.length ? +(a.reduce((s,v)=>s+v,0)/a.length).toFixed(2) : null }
+function today(){ return new Date().toISOString().slice(0,10) }
+function addDays(d,n){ const dt=new Date(d); dt.setDate(dt.getDate()+n); return dt.toISOString().slice(0,10) }
+
+/* ═══════════════════════════════════════════
+   PRESETS & FILTERS
+═══════════════════════════════════════════ */
 function setPre(p){
   document.querySelectorAll('.pb').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
   const now=today();
   const m={'7d':addDays(now,-7),'1m':addDays(now,-30),'3m':addDays(now,-90),'6m':addDays(now,-180)};
-  if(p==='all'){document.getElementById('f-s').value='';document.getElementById('f-e').value='';}
-  else if(p==='ytd'){document.getElementById('f-s').value=new Date().getFullYear()+'-01-01';document.getElementById('f-e').value=now;}
-  else{document.getElementById('f-s').value=m[p];document.getElementById('f-e').value=now;}
+  if(p==='all'){ document.getElementById('f-s').value=''; document.getElementById('f-e').value=''; }
+  else if(p==='ytd'){ document.getElementById('f-s').value=new Date().getFullYear()+'-01-01'; document.getElementById('f-e').value=now; }
+  else { document.getElementById('f-s').value=m[p]; document.getElementById('f-e').value=now; }
   render();
 }
-function onCD(){document.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));render();}
+function onCD(){ document.querySelectorAll('.pb').forEach(b=>b.classList.remove('on')); render(); }
 
-/* ── FILTERS ───────────────────────── */
 function filtered(){
-  const s=document.getElementById('f-s').value,e=document.getElementById('f-e').value;
-  const fi=document.getElementById('f-i').value,fk=document.getElementById('f-kz').value;
-  const fn=document.getElementById('f-n').value,fd=document.getElementById('f-d').value;
+  const s=document.getElementById('f-s').value, e=document.getElementById('f-e').value;
+  const fi=document.getElementById('f-i').value, fk=document.getElementById('f-kz').value;
+  const fn=document.getElementById('f-n').value, fd=document.getElementById('f-d').value;
   const fh=document.getElementById('f-htf').value;
   return ALL.filter(r=>{
     const d=r['Session Date']||'';
-    if(s&&d<s)return false;if(e&&d>e)return false;
-    if(fi&&r.Instrument!==fi)return false;
-    if(fk&&r['Kill Zone']!==fk)return false;
-    if(fn==='none'&&r['News Day']!=='None')return false;
-    if(fn==='red'&&!['Red News','Red + Orange'].includes(r['News Day']))return false;
-    if(fn==='any'&&r['News Day']==='None')return false;
-    if(fd&&r['Day of Week']!==fd)return false;
-    if(fh==='yes'&&r['HTF Bias Aligned']!=='Yes')return false;
-    if(fh==='no'&&r['HTF Bias Aligned']==='Yes')return false;
+    if(s&&d<s) return false;
+    if(e&&d>e) return false;
+    if(fi&&r.Instrument!==fi) return false;
+    if(fk&&r['Kill Zone']!==fk) return false;
+    if(fn==='none'&&r['News Day']!=='None') return false;
+    if(fn==='red'&&!['Red News','Red + Orange'].includes(r['News Day'])) return false;
+    if(fn==='any'&&r['News Day']==='None') return false;
+    if(fd&&r['Day of Week']!==fd) return false;
+    if(fh==='yes'&&r['HTF Bias Aligned']!=='Yes') return false;
+    if(fh==='no'&&r['HTF Bias Aligned']==='Yes') return false;
     return true;
   });
 }
 
 function updatePills(){
-  const s=document.getElementById('f-s').value,e=document.getElementById('f-e').value;
-  const fi=document.getElementById('f-i').value,fk=document.getElementById('f-kz').value;
-  const fn=document.getElementById('f-n').value,fd=document.getElementById('f-d').value;
+  const s=document.getElementById('f-s').value, e=document.getElementById('f-e').value;
+  const fi=document.getElementById('f-i').value, fk=document.getElementById('f-kz').value;
+  const fn=document.getElementById('f-n').value, fd=document.getElementById('f-d').value;
   const fh=document.getElementById('f-htf').value;
   const pills=[];
-  if(s||e)pills.push({l:(s||'…')+' → '+(e||'…'),c:()=>{document.getElementById('f-s').value='';document.getElementById('f-e').value='';setPre('all');}});
-  if(fi)pills.push({l:fi,c:()=>{document.getElementById('f-i').value='';render();}});
-  if(fk)pills.push({l:fk,c:()=>{document.getElementById('f-kz').value='';render();}});
-  if(fn)pills.push({l:{none:'No news',red:'Red news',any:'Any news'}[fn],c:()=>{document.getElementById('f-n').value='';render();}});
-  if(fd)pills.push({l:fd,c:()=>{document.getElementById('f-d').value='';render();}});
-  if(fh)pills.push({l:fh==='yes'?'HTF aligned':'HTF not aligned',c:()=>{document.getElementById('f-htf').value='';render();}});
-  _clears=pills.map(p=>p.c);
-  const bar=document.getElementById('pills');
-  bar.innerHTML=pills.length
-    ?`<span class="pc">${pills.length} filter${pills.length>1?'s':''} active</span>`
-     +pills.map((p,i)=>`<span class="pill" onclick="_clears[${i}]()">${p.l} <span style="opacity:.5">×</span></span>`).join('')
-    :'';
+  if(s||e) pills.push({l:(s||'…')+' → '+(e||'…'), c:()=>{ document.getElementById('f-s').value=''; document.getElementById('f-e').value=''; setPre('all'); }});
+  if(fi)   pills.push({l:fi,    c:()=>{ document.getElementById('f-i').value='';   render(); }});
+  if(fk)   pills.push({l:fk,    c:()=>{ document.getElementById('f-kz').value='';  render(); }});
+  if(fn)   pills.push({l:{none:'No news',red:'Red news',any:'Any news'}[fn], c:()=>{ document.getElementById('f-n').value=''; render(); }});
+  if(fd)   pills.push({l:fd,    c:()=>{ document.getElementById('f-d').value='';   render(); }});
+  if(fh)   pills.push({l:fh==='yes'?'HTF aligned':'HTF not aligned', c:()=>{ document.getElementById('f-htf').value=''; render(); }});
+  _clears = pills.map(p=>p.c);
+  const bar = document.getElementById('pills');
+  bar.innerHTML = pills.length
+    ? `<span class="pc">${pills.length} filter${pills.length>1?'s':''} active</span>`
+      + pills.map((p,i)=>`<span class="pill" onclick="_clears[${i}]()">${p.l}<span class="pill-x">&times;</span></span>`).join('')
+    : '';
 }
 
-/* ── CORE STATS ────────────────────── */
+/* ═══════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════ */
 function stats(rows){
-  const withSetup=rows.filter(r=>r['Setup Appeared']==='Yes');
-  const freqPct=pct(withSetup.length,rows.length);
-  const rrs=withSetup.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
-  const quals=withSetup.filter(r=>parseFloat(r['Setup Quality (1-5)'])>0).map(r=>parseFloat(r['Setup Quality (1-5)']));
-  const longs=withSetup.filter(r=>r['Setup Direction']==='Long').length;
-  const shorts=withSetup.filter(r=>r['Setup Direction']==='Short').length;
-  return{
-    total:rows.length,
-    withSetup:withSetup.length,
-    freqPct,
-    avgRR:avg(rrs),
-    avgQual:avg(quals),
-    longPct:pct(longs,withSetup.length),
-    shortPct:pct(shorts,withSetup.length),
-    longs,shorts,
+  const ws = rows.filter(r=>r['Setup Appeared']==='Yes');
+  const rrs   = ws.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
+  const quals = ws.filter(r=>parseFloat(r['Setup Quality (1-5)'])>0).map(r=>parseFloat(r['Setup Quality (1-5)']));
+  const longs  = ws.filter(r=>r['Setup Direction']==='Long').length;
+  const shorts = ws.filter(r=>r['Setup Direction']==='Short').length;
+  return {
+    total:   rows.length,
+    withSetup: ws.length,
+    freqPct: pct(ws.length, rows.length),
+    avgRR:   avg(rrs),
+    avgQual: avg(quals),
+    longPct: pct(longs, ws.length),
+    shortPct:pct(shorts, ws.length),
+    longs, shorts,
   };
 }
 
-/* ── RENDER ────────────────────────── */
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
 function render(){
   updatePills();
-  const data=filtered();
-  // repopulate instrument select
-  const iSel=document.getElementById('f-i'),ci=iSel.value;
-  const insts=[...new Set(ALL.map(r=>r.Instrument).filter(Boolean))].sort();
-  iSel.innerHTML='<option value="">All instruments</option>'+insts.map(i=>`<option${ci===i?' selected':''}>${i}</option>`).join('');
+  const data = filtered();
+  const iSel = document.getElementById('f-i'), ci = iSel.value;
+  const insts = [...new Set(ALL.map(r=>r.Instrument).filter(Boolean))].sort();
+  iSel.innerHTML = '<option value="">All instruments</option>' + insts.map(i=>`<option${ci===i?' selected':''}>${i}</option>`).join('');
 
-  const S=stats(data);
-  const withSetup=data.filter(r=>r['Setup Appeared']==='Yes');
+  const S  = stats(data);
+  const ws = data.filter(r=>r['Setup Appeared']==='Yes');
+  const freqC = S.freqPct>=60?'var(--green)':S.freqPct>=40?'var(--amber)':'var(--red)';
+  const rrC   = S.avgRR>=3?'var(--green)':S.avgRR>=2?'var(--amber)':'var(--red)';
+  const qC    = S.avgQual>=4?'var(--green)':S.avgQual>=3?'var(--amber)':'var(--red)';
+  const freqCls = S.freqPct>=60?'g':S.freqPct>=40?'a':'r';
+  const rrCls   = S.avgRR>=3?'g':S.avgRR>=2?'a':'r';
+  const qCls    = S.avgQual>=4?'g':S.avgQual>=3?'a':'r';
 
-  document.getElementById('app').innerHTML=buildLayout(S);
-
-  buildKPIRing('ring-freq',S.freqPct,'#4f7ef0');
-  buildKPIRing('ring-qual',S.avgQual?Math.round(S.avgQual/5*100):0,S.avgQual>=4?'#4ecb71':S.avgQual>=3?'#e0a830':'#e05c5c',true,S.avgQual,'/5');
-  buildDirectionBar(S);
-  buildFreqByPatternChart(data);
-  buildAvgRRChart(withSetup);
-  buildKZHeatmap(data);
-  buildDayChart(data);
-  buildNewsChart(data);
-  buildHTFChart(data);
-  buildEntryTypeChart(withSetup);
-  buildPatternTable(data);
-}
-
-function buildLayout(S){
-  const freqClr=S.freqPct>=60?'var(--green)':S.freqPct>=40?'var(--amber)':'var(--red)';
-  const rrClr=S.avgRR>=3?'var(--green)':S.avgRR>=2?'var(--amber)':'var(--red)';
-  const qClr=S.avgQual>=4?'var(--green)':S.avgQual>=3?'var(--amber)':'var(--red)';
-  return`
+  document.getElementById('app').innerHTML = `
 <!-- ① KPIs -->
 <div class="row c4 mb">
-  <div class="kpi"><div class="kpi-stripe" style="background:var(--accent)"></div>
-    <div class="kpi-ico">📅</div><div class="kpi-lbl">Sessions studied</div>
-    <div class="kpi-val b">${S.total}</div><div class="kpi-hint">days in replay</div>
+  <div class="kpi">
+    <div class="kpi-stripe" style="background:var(--accent)"></div>
+    <div class="kpi-ico">📅</div>
+    <div class="kpi-lbl">Sessions studied</div>
+    <div class="kpi-val b">${S.total}</div>
+    <div class="kpi-hint">days in replay</div>
   </div>
-  <div class="kpi"><div class="kpi-stripe" style="background:${freqClr}"></div>
-    <div class="kpi-ico">🎯</div><div class="kpi-lbl">Setup frequency</div>
-    <div class="kpi-val ${S.freqPct>=60?'g':S.freqPct>=40?'a':'r'}">${S.freqPct}%</div>
-    <div class="kpi-hint">${S.withSetup} of ${S.total} sessions</div>
-    <div class="kbar"><div class="kbar-f" style="width:${S.freqPct}%;background:${freqClr}"></div></div>
+  <div class="kpi">
+    <div class="kpi-stripe" style="background:${freqC}"></div>
+    <div class="kpi-ico">🎯</div>
+    <div class="kpi-lbl">Setup frequency</div>
+    <div class="kpi-val ${freqCls}">${S.freqPct}%</div>
+    <div class="kpi-hint">${S.withSetup} setups from ${S.total} sessions</div>
+    <div class="kbar"><div class="kbar-f" style="width:${S.freqPct}%;background:${freqC}"></div></div>
   </div>
-  <div class="kpi"><div class="kpi-stripe" style="background:${rrClr}"></div>
-    <div class="kpi-ico">⚖️</div><div class="kpi-lbl">Avg potential R:R</div>
-    <div class="kpi-val ${S.avgRR>=3?'g':S.avgRR>=2?'a':'r'}">${S.avgRR!=null?S.avgRR+'R':'—'}</div>
+  <div class="kpi">
+    <div class="kpi-stripe" style="background:${rrC}"></div>
+    <div class="kpi-ico">⚖️</div>
+    <div class="kpi-lbl">Avg potential R:R</div>
+    <div class="kpi-val ${rrCls}">${S.avgRR!=null?S.avgRR+'R':'—'}</div>
     <div class="kpi-hint">measured to logical target</div>
   </div>
-  <div class="kpi"><div class="kpi-stripe" style="background:${qClr}"></div>
-    <div class="kpi-ico">⭐</div><div class="kpi-lbl">Avg setup quality</div>
-    <div class="kpi-val ${S.avgQual>=4?'g':S.avgQual>=3?'a':'r'}">${S.avgQual!=null?S.avgQual:'—'}</div>
-    <div class="kpi-hint">out of 5 · when setup appeared</div>
-    ${S.avgQual?`<div class="kbar"><div class="kbar-f" style="width:${S.avgQual/5*100}%;background:${qClr}"></div></div>`:''}
+  <div class="kpi">
+    <div class="kpi-stripe" style="background:${qC}"></div>
+    <div class="kpi-ico">⭐</div>
+    <div class="kpi-lbl">Avg setup quality</div>
+    <div class="kpi-val ${qCls}">${S.avgQual!=null?S.avgQual:'—'}</div>
+    <div class="kpi-hint">out of 5 — when setup appeared</div>
+    ${S.avgQual?`<div class="kbar"><div class="kbar-f" style="width:${S.avgQual/5*100}%;background:${qC}"></div></div>`:''}
   </div>
 </div>
 
-<!-- ② Freq by pattern + Direction overview -->
+<!-- ② Freq by pattern + Direction -->
 <div class="slbl">Setup frequency by session pattern</div>
 <div class="row c32 mb">
   <div class="card">
-    <div class="ct">How often does each pattern produce a valid setup?<span class="ct-sub">% of days the pattern appeared where a setup formed</span></div>
+    <div class="ct">
+      How often does each pattern produce a valid setup?
+      <span class="ct-sub">% of days the pattern appeared</span>
+    </div>
     <div class="leg" id="leg-p"></div>
     <div class="cw" style="height:260px"><canvas id="c-p"></canvas></div>
   </div>
   <div class="card">
     <div class="ct">Setup direction bias</div>
-    <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem 0">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.75rem 0">
       <div style="position:relative;width:140px;height:140px">
-        <svg class="ring-svg" width="140" height="140" viewBox="0 0 140 140" id="ring-freq" aria-label="Setup frequency ring"></svg>
+        <svg class="ring-svg" width="140" height="140" viewBox="0 0 140 140" id="ring-freq" aria-label="Frequency ring"></svg>
         <div class="ring-label" style="top:50%;left:50%;transform:translate(-50%,-50%)">
-          <div class="ring-val" id="rv-freq" style="color:var(--accent2)">—</div>
+          <div class="ring-val" id="rv-freq" style="color:var(--ac2)">—</div>
           <div class="ring-lbl">Frequency</div>
         </div>
       </div>
-      <div class="divider" style="width:100%;margin:1rem 0 .75rem"></div>
-      <div style="width:100%">
-        <div class="dbar-legend" style="margin-bottom:4px">
-          <span style="color:var(--green);font-size:11px;font-weight:600">Long ${S.longs}</span>
-          <span style="color:var(--sub);font-size:10px">${S.withSetup} setups</span>
-          <span style="color:var(--red);font-size:11px;font-weight:600">${S.shorts} Short</span>
+      <div class="divider" style="width:100%;margin:.9rem 0 .75rem"></div>
+      <div style="width:100%;padding:0 .25rem">
+        <div class="dbar-legend" style="margin-bottom:5px">
+          <span style="color:var(--green);font-weight:700">↑ Long&nbsp;${S.longs}</span>
+          <span style="color:var(--text3);font-size:11.5px">${S.withSetup} setups total</span>
+          <span style="color:var(--red);font-weight:700">${S.shorts}&nbsp;Short ↓</span>
         </div>
-        <div class="dbar" id="dbar">
-          <div class="dbar-l" id="dbar-l" style="width:${S.withSetup?pct(S.longs,S.withSetup):50}%"></div>
-          <div class="dbar-r" id="dbar-r" style="width:${S.withSetup?pct(S.shorts,S.withSetup):50}%"></div>
+        <div class="dbar">
+          <div class="dbar-l" style="width:${S.withSetup?pct(S.longs,S.withSetup):50}%"></div>
+          <div class="dbar-r" style="width:${S.withSetup?pct(S.shorts,S.withSetup):50}%"></div>
         </div>
-        <div class="dbar-legend" style="margin-top:4px">
-          <span style="font-size:11px;font-weight:600;color:var(--green)">${S.longPct}%</span>
-          <span style="font-size:10px;color:var(--hint)">direction split</span>
-          <span style="font-size:11px;font-weight:600;color:var(--red)">${S.shortPct}%</span>
+        <div class="dbar-legend" style="margin-top:5px">
+          <span style="font-weight:700;color:var(--green)">${S.longPct}%</span>
+          <span style="color:var(--text3);font-size:11.5px">direction split</span>
+          <span style="font-weight:700;color:var(--red)">${S.shortPct}%</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ③ Avg potential R:R by pattern -->
+<!-- ③ Avg R:R by pattern -->
 <div class="slbl">Average potential R:R by session pattern</div>
 <div class="card mb">
-  <div class="ct">What R:R does each pattern offer on average?<span class="ct-sub">when a setup appeared</span></div>
+  <div class="ct">
+    What R:R does each pattern offer on average?
+    <span class="ct-sub">when a valid setup appeared</span>
+  </div>
   <div class="cw" style="height:240px"><canvas id="c-rr"></canvas></div>
 </div>
 
@@ -466,116 +638,123 @@ function buildLayout(S){
   <div class="ct">In which kill zone does each pattern most reliably produce setups?</div>
   <div class="hm-wrap"><div id="hm"></div></div>
   <div class="csub">
-    <span style="color:var(--green)">■</span> ≥60% freq &nbsp;
-    <span style="color:var(--amber)">■</span> 40–59% &nbsp;
-    <span style="color:var(--red)">■</span> &lt;40% &nbsp;
-    <span style="color:var(--hint)">■</span> &lt;3 observations
+    <span style="color:var(--green)">■</span>&nbsp;≥60% freq&ensp;
+    <span style="color:var(--amber)">■</span>&nbsp;40–59%&ensp;
+    <span style="color:var(--red)">■</span>&nbsp;&lt;40%&ensp;
+    <span style="color:var(--text3)">■</span>&nbsp;&lt;3 observations
   </div>
 </div>
 
-<!-- ⑤ Context analytics row -->
-<div class="slbl">Contextual analysis — days, news, HTF alignment, entry types</div>
+<!-- ⑤ Context row -->
+<div class="slbl">Contextual analysis — days, news, HTF, entry types</div>
 <div class="row c4 mb">
   <div class="card">
-    <div class="ct" style="font-size:11.5px">Setup freq by day</div>
+    <div class="ct" style="font-size:12.5px">Setup freq by day</div>
     <div class="cw" style="height:160px"><canvas id="c-day"></canvas></div>
-    <div class="csub">Which weekday produces the most setups?</div>
+    <div class="csub">Which weekday is most productive?</div>
   </div>
   <div class="card">
-    <div class="ct" style="font-size:11.5px">News day impact</div>
+    <div class="ct" style="font-size:12.5px">News day impact</div>
     <div class="cw" style="height:160px"><canvas id="c-news"></canvas></div>
-    <div class="csub">Does news suppress or amplify setup frequency?</div>
+    <div class="csub">Does news suppress or amplify setups?</div>
   </div>
   <div class="card">
-    <div class="ct" style="font-size:11.5px">HTF alignment</div>
+    <div class="ct" style="font-size:12.5px">HTF alignment</div>
     <div class="cw" style="height:160px"><canvas id="c-htf"></canvas></div>
     <div class="csub">Setup freq with vs without HTF narrative</div>
   </div>
   <div class="card">
-    <div class="ct" style="font-size:11.5px">Entry type distribution</div>
-    <div class="leg" id="leg-et" style="margin-bottom:6px;font-size:10px"></div>
+    <div class="ct" style="font-size:12.5px">Entry type distribution</div>
+    <div class="leg" id="leg-et" style="margin-bottom:6px"></div>
     <div class="cw" style="height:130px"><canvas id="c-et"></canvas></div>
     <div class="csub">Which structure appears most at entry</div>
   </div>
 </div>
 
-<!-- ⑥ Pattern detail table -->
+<!-- ⑥ Pattern table -->
 <div class="slbl">Pattern intelligence table</div>
 <div class="card">
-  <div class="ct">All patterns ranked &mdash; full statistical breakdown <span class="ct-sub">click headers to sort</span></div>
+  <div class="ct">
+    All patterns — full statistical breakdown
+    <span class="ct-sub">click column headers to sort</span>
+  </div>
   <div id="ptbl"></div>
 </div>`;
+
+  buildKPIRing(S.freqPct, freqC);
+  buildFreqByPatternChart(data);
+  buildAvgRRChart(ws);
+  buildKZHeatmap(data);
+  buildDayChart(data);
+  buildNewsChart(data);
+  buildHTFChart(data);
+  buildEntryTypeChart(ws);
+  buildPatternTable(data);
 }
 
-/* ── RING CHART ─────────────────────── */
-function buildKPIRing(id,pct,color,isRaw=false,raw=null,suffix=''){
-  const svg=document.getElementById(id);if(!svg)return;
-  const r=56,cx=70,cy=70,circ=2*Math.PI*r;
-  const offset=circ-(pct/100)*circ;
-  svg.innerHTML=`<circle class="ring-bg" cx="${cx}" cy="${cy}" r="${r}"/>
-  <circle class="ring-fg" cx="${cx}" cy="${cy}" r="${r}" stroke="${color}"
+/* ─── Ring ─────────────────────────────── */
+function buildKPIRing(freq, color){
+  const svg = document.getElementById('ring-freq'); if(!svg) return;
+  const r=56, circ=2*Math.PI*r, offset=circ-(freq/100)*circ;
+  svg.innerHTML=`<circle class="ring-bg" cx="70" cy="70" r="${r}"/>
+  <circle class="ring-fg" cx="70" cy="70" r="${r}" stroke="${color}"
     stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>`;
-  const valEl=document.getElementById('rv-'+id.replace('ring-',''));
-  if(valEl){valEl.style.color=color;valEl.textContent=isRaw&&raw!=null?raw+suffix:pct+'%';}
+  const v=document.getElementById('rv-freq');
+  if(v){ v.style.color=color; v.textContent=freq+'%'; }
 }
 
-function buildDirectionBar(S){}// handled inline
-
-/* ── FREQ BY PATTERN ────────────────── */
+/* ─── Freq by pattern ───────────────────── */
 function buildFreqByPatternChart(data){
   const rows=PATS.map(p=>{
-    const total=data.filter(r=>r['Pattern Tag']===p||r['Pattern Tag']?.includes(p));
-    const totalAll=data.filter(r=>r['Pattern Tag']===p);
-    if(!totalAll.length)return null;
-    const withS=totalAll.filter(r=>r['Setup Appeared']==='Yes');
-    return{p,freq:pct(withS.length,totalAll.length),n:totalAll.length};
+    const g=data.filter(r=>r['Pattern Tag']===p);
+    if(!g.length) return null;
+    const ws=g.filter(r=>r['Setup Appeared']==='Yes');
+    return {p, freq:pct(ws.length,g.length), n:g.length};
   }).filter(Boolean);
   const labels=rows.map(r=>r.p);
   const vals=rows.map(r=>r.freq);
-  const clrs=rows.map(r=>r.freq>=60?'#4ecb71bb':r.freq>=40?'#e0a830bb':'#e05c5cbb');
-  const brd=rows.map(r=>r.freq>=60?'#4ecb71':r.freq>=40?'#e0a830':'#e05c5c');
+  const clrs=vals.map(v=>v>=60?'#4ecb71':v>=40?'#e0a830':'#e05c5c');
   document.getElementById('leg-p').innerHTML=labels.map((l,i)=>
-    `<span class="li"><span class="ld" style="background:${brd[i]}"></span>${l.length>26?l.slice(0,24)+'…':l} <strong style="color:var(--text);margin-left:2px">${vals[i]}%</strong></span>`
+    `<span class="li"><span class="ld" style="background:${clrs[i]}"></span>${l.length>27?l.slice(0,25)+'…':l}&nbsp;<strong style="color:var(--text)">${vals[i]}%</strong></span>`
   ).join('');
   dc('p');
   charts['p']=new Chart(document.getElementById('c-p'),{
     type:'bar',
-    data:{labels,datasets:[{data:vals,backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:5,borderSkipped:false}]},
+    data:{labels,datasets:[{data:vals,backgroundColor:clrs.map(c=>c+'bb'),borderColor:clrs,borderWidth:1,borderRadius:5,borderSkipped:false}]},
     options:{...CDEFS,indexAxis:'y',scales:{
-      x:{min:0,max:100,ticks:{callback:v=>v+'%',...TF},grid:{color:GC}},
-      y:{ticks:{...TF,font:{size:10}},grid:{color:'transparent'}}
-    },plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.x}% setup frequency`},...TT}}}
+      x:{min:0,max:100,ticks:{callback:v=>v+'%',...tf()},grid:{color:gc()}},
+      y:{ticks:{...tf(),font:{size:11}},grid:{color:'transparent'}}
+    },plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.x}% setup frequency`},...tt()}}}
   });
 }
 
-/* ── AVG RR BY PATTERN ──────────────── */
-function buildAvgRRChart(withSetup){
+/* ─── Avg R:R by pattern ────────────────── */
+function buildAvgRRChart(ws){
   const rows=PATS.map((p,i)=>{
-    const g=withSetup.filter(r=>r['Pattern Tag']===p);
+    const g=ws.filter(r=>r['Pattern Tag']===p);
     const rrs=g.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
-    return rrs.length?{p,rr:avg(rrs),n:g.length,i}:null;
+    return rrs.length?{p,rr:avg(rrs),i}:null;
   }).filter(Boolean);
   const labels=rows.map(r=>r.p);
   const vals=rows.map(r=>r.rr);
-  const clrs=rows.map(r=>r.rr>=3?'#4ecb71bb':r.rr>=2?'#e0a830bb':'#e05c5cbb');
-  const brd=rows.map(r=>r.rr>=3?'#4ecb71':r.rr>=2?'#e0a830':'#e05c5c');
+  const clrs=vals.map(v=>v>=3?'#4ecb71':v>=2?'#e0a830':'#e05c5c');
   dc('rr');
   charts['rr']=new Chart(document.getElementById('c-rr'),{
     type:'bar',
-    data:{labels,datasets:[{data:vals,backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:5,borderSkipped:false}]},
+    data:{labels,datasets:[{data:vals,backgroundColor:clrs.map(c=>c+'bb'),borderColor:clrs,borderWidth:1,borderRadius:5,borderSkipped:false}]},
     options:{...CDEFS,scales:{
-      x:{ticks:{...TF,maxRotation:25,font:{size:10}},grid:{color:GC}},
-      y:{min:0,ticks:{callback:v=>v+'R',...TF},grid:{color:GC}}
-    },plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` Avg ${c.parsed.y}R potential`},...TT}}}
+      x:{ticks:{...tf(),maxRotation:25,font:{size:10.5}},grid:{color:gc()}},
+      y:{min:0,ticks:{callback:v=>v+'R',...tf()},grid:{color:gc()}}
+    },plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` Avg ${c.parsed.y}R potential`},...tt()}}}
   });
 }
 
-/* ── KZ HEATMAP ─────────────────────── */
+/* ─── Kill zone heatmap ─────────────────── */
 function buildKZHeatmap(data){
   const pats=PATS.filter(p=>data.some(r=>r['Pattern Tag']===p));
   const kzs=KZS.filter(k=>data.some(r=>r['Kill Zone']===k));
-  if(!pats.length||!kzs.length){document.getElementById('hm').innerHTML='<div class="nodata">Not enough data — add more sessions.</div>';return;}
-  function cls(f,n){if(n<3)return'cn';if(f>=60)return'ca';if(f>=40)return'cb';return'cc';}
+  if(!pats.length||!kzs.length){ document.getElementById('hm').innerHTML='<div class="nodata">Not enough data yet — add more sessions.</div>'; return; }
+  function cls(f,n){ if(n<3) return 'cn'; if(f>=60) return 'ca'; if(f>=40) return 'cb'; return 'cc'; }
   let h=`<table class="hmt"><thead><tr><th></th>${kzs.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>`;
   pats.forEach(p=>{
     h+=`<tr><td class="rh">${p}</td>`;
@@ -591,119 +770,107 @@ function buildKZHeatmap(data){
   document.getElementById('hm').innerHTML=h;
 }
 
-/* ── DAY OF WEEK ────────────────────── */
+/* ─── Day of week ───────────────────────── */
 function buildDayChart(data){
   const vals=DAYS.map(d=>{
     const g=data.filter(r=>r['Day of Week']===d);
-    const ws=g.filter(r=>r['Setup Appeared']==='Yes');
-    return g.length?pct(ws.length,g.length):null;
+    return g.length ? pct(g.filter(r=>r['Setup Appeared']==='Yes').length,g.length) : null;
   });
-  const labels=DAYS.map(d=>d.slice(0,3));
-  const clrs=vals.map(v=>v===null?'#3d4d66bb':v>=60?'#4ecb71bb':v>=40?'#e0a830bb':'#e05c5cbb');
-  const brd=vals.map(v=>v===null?'#3d4d66':v>=60?'#4ecb71':v>=40?'#e0a830':'#e05c5c');
+  const clrs=vals.map(v=>v===null?'#94a3b8bb':v>=60?'#4ecb71bb':v>=40?'#e0a830bb':'#e05c5cbb');
+  const brd =vals.map(v=>v===null?'#94a3b8':v>=60?'#4ecb71':v>=40?'#e0a830':'#e05c5c');
   dc('day');
   charts['day']=new Chart(document.getElementById('c-day'),{
     type:'bar',
-    data:{labels,datasets:[{data:vals.map(v=>v??0),backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:4,borderSkipped:false}]},
-    options:{...CDEFS,scales:{x:{ticks:{...TF},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...TF},grid:{color:GC}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% setup freq`},...TT}}}
+    data:{labels:DAYS.map(d=>d.slice(0,3)),datasets:[{data:vals.map(v=>v??0),backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:4,borderSkipped:false}]},
+    options:{...CDEFS,scales:{x:{ticks:{...tf()},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...tf()},grid:{color:gc()}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% setup freq`},...tt()}}}
   });
 }
 
-/* ── NEWS IMPACT ────────────────────── */
+/* ─── News impact ───────────────────────── */
 function buildNewsChart(data){
   const cats=['None','Orange News','Red News','Red + Orange'];
-  const labels=['Clean','Orange','Red','Red+Orange'];
+  const labels=['Clean','Orange','Red','Red+Or'];
   const vals=cats.map(c=>{
     const g=data.filter(r=>r['News Day']===c);
-    return g.length?pct(g.filter(r=>r['Setup Appeared']==='Yes').length,g.length):null;
+    return g.length ? pct(g.filter(r=>r['Setup Appeared']==='Yes').length,g.length) : null;
   });
   const clrs=['#4ecb71bb','#e0a830bb','#e05c5cbb','#a78bfabb'];
-  const brd=['#4ecb71','#e0a830','#e05c5c','#a78bfa'];
+  const brd =['#4ecb71','#e0a830','#e05c5c','#a78bfa'];
   dc('news');
   charts['news']=new Chart(document.getElementById('c-news'),{
     type:'bar',
     data:{labels,datasets:[{data:vals.map(v=>v??0),backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:4,borderSkipped:false}]},
-    options:{...CDEFS,scales:{x:{ticks:{...TF,font:{size:10}},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...TF},grid:{color:GC}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% setup freq`},...TT}}}
+    options:{...CDEFS,scales:{x:{ticks:{...tf(),font:{size:10.5}},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...tf()},grid:{color:gc()}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% freq`},...tt()}}}
   });
 }
 
-/* ── HTF ALIGNMENT ──────────────────── */
+/* ─── HTF alignment ─────────────────────── */
 function buildHTFChart(data){
   const al=data.filter(r=>r['HTF Bias Aligned']==='Yes');
   const na=data.filter(r=>r['HTF Bias Aligned']!=='Yes');
   const vals=[
     al.length?pct(al.filter(r=>r['Setup Appeared']==='Yes').length,al.length):0,
-    na.length?pct(na.filter(r=>r['Setup Appeared']==='Yes').length,na.length):0
+    na.length?pct(na.filter(r=>r['Setup Appeared']==='Yes').length,na.length):0,
   ];
   const clrs=vals.map(v=>v>=60?'#4ecb71bb':v>=40?'#e0a830bb':'#e05c5cbb');
-  const brd=vals.map(v=>v>=60?'#4ecb71':v>=40?'#e0a830':'#e05c5c');
+  const brd =vals.map(v=>v>=60?'#4ecb71':v>=40?'#e0a830':'#e05c5c');
   dc('htf');
   charts['htf']=new Chart(document.getElementById('c-htf'),{
     type:'bar',
     data:{labels:['HTF Aligned','Not Aligned'],datasets:[{data:vals,backgroundColor:clrs,borderColor:brd,borderWidth:1,borderRadius:4,borderSkipped:false}]},
-    options:{...CDEFS,scales:{x:{ticks:{...TF,font:{size:10}},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...TF},grid:{color:GC}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% setup freq`},...TT}}}
+    options:{...CDEFS,scales:{x:{ticks:{...tf(),font:{size:11}},grid:{color:'transparent'}},y:{min:0,max:100,ticks:{callback:v=>v+'%',...tf()},grid:{color:gc()}}},plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>` ${c.parsed.y}% freq`},...tt()}}}
   });
 }
 
-/* ── ENTRY TYPE ─────────────────────── */
-function buildEntryTypeChart(withSetup){
+/* ─── Entry type ────────────────────────── */
+function buildEntryTypeChart(ws){
   const types=['FVG','OB','Breaker','BOS','CISD','Rejection Block','IFVG'];
-  const counts=types.map(t=>withSetup.filter(r=>r['Entry Type']===t).length);
+  const counts=types.map(t=>ws.filter(r=>r['Entry Type']===t).length);
   const total=counts.reduce((a,b)=>a+b,0);
   const labels=types.filter((_,i)=>counts[i]>0);
   const vals=counts.filter(v=>v>0);
-  const clrs=['#4f7ef0','#a78bfa','#fb923c','#4ecb71','#e0a830','#e05c5c','#38bdf8'];
-  const fclrs=types.map((t,i)=>[clrs[i],counts[i]]).filter(([,c])=>c>0).map(([c])=>c);
+  const palette=['#4f7ef0','#a78bfa','#fb923c','#4ecb71','#e0a830','#e05c5c','#38bdf8'];
+  const fclrs=types.map((t,i)=>[palette[i],counts[i]]).filter(([,c])=>c>0).map(([c])=>c);
   document.getElementById('leg-et').innerHTML=labels.map((l,i)=>
-    `<span class="li"><span class="ld" style="background:${fclrs[i]}"></span>${l} <strong style="color:var(--text)">${vals[i]}</strong></span>`
+    `<span class="li"><span class="ld" style="background:${fclrs[i]}"></span>${l}&nbsp;<strong style="color:var(--text)">${vals[i]}</strong></span>`
   ).join('');
   dc('et');
   charts['et']=new Chart(document.getElementById('c-et'),{
     type:'doughnut',
     data:{labels,datasets:[{data:vals,backgroundColor:fclrs.map(c=>c+'bb'),borderColor:fclrs,borderWidth:1,hoverOffset:4}]},
-    options:{...CDEFS,cutout:'60%',plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${pct(c.parsed,total)}%)`},...TT}}}
+    options:{...CDEFS,cutout:'60%',plugins:{...CDEFS.plugins,tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${pct(c.parsed,total)}%)`},...tt()}}}
   });
 }
 
-/* ── PATTERN TABLE ──────────────────── */
+/* ─── Pattern table ─────────────────────── */
 function buildPatternTable(data){
-  const rows=PATS.map((p,i)=>{
+  const rows=PATS.map(p=>{
     const g=data.filter(r=>r['Pattern Tag']===p);
-    if(!g.length)return null;
+    if(!g.length) return null;
     const ws=g.filter(r=>r['Setup Appeared']==='Yes');
     const freq=pct(ws.length,g.length);
-    const rrs=ws.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
+    const rrs  =ws.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
     const quals=ws.filter(r=>parseFloat(r['Setup Quality (1-5)'])>0).map(r=>parseFloat(r['Setup Quality (1-5)']));
-    const avgRR=avg(rrs),avgQ=avg(quals);
-    const longs=ws.filter(r=>r['Setup Direction']==='Long').length;
+    const longs =ws.filter(r=>r['Setup Direction']==='Long').length;
     const shorts=ws.filter(r=>r['Setup Direction']==='Short').length;
-    const dominantDir=longs>shorts?'Long':shorts>longs?'Short':'Mixed';
-    const types=[...ws.reduce((m,r)=>{if(r['Entry Type'])m.set(r['Entry Type'],(m.get(r['Entry Type'])||0)+1);return m;},new Map())].sort((a,b)=>b[1]-a[1]);
-    const topType=types[0]?types[0][0]:'—';
-    const nyReact=[...ws.reduce((m,r)=>{if(r['NY AM Reaction'])m.set(r['NY AM Reaction'],(m.get(r['NY AM Reaction'])||0)+1);return m;},new Map())].sort((a,b)=>b[1]-a[1]);
-    const dominantNY=nyReact[0]?nyReact[0][0]:'—';
-    const grade=freq>=60&&(avgRR??0)>=3&&g.length>=10?'A':freq>=45&&(avgRR??0)>=2&&g.length>=5?'B':g.length>=3?'C':'N';
-    return{p,n:g.length,ws:ws.length,freq,avgRR,avgQ,dominantDir,topType,dominantNY,grade,longs,shorts,i};
+    const domDir=longs>shorts?'Long':shorts>longs?'Short':'Mixed';
+    const typeMap=[...ws.reduce((m,r)=>{ if(r['Entry Type']) m.set(r['Entry Type'],(m.get(r['Entry Type'])||0)+1); return m; },new Map())].sort((a,b)=>b[1]-a[1]);
+    const topType=typeMap[0]?typeMap[0][0]:'—';
+    const nyMap=[...ws.reduce((m,r)=>{ if(r['NY AM Reaction']) m.set(r['NY AM Reaction'],(m.get(r['NY AM Reaction'])||0)+1); return m; },new Map())].sort((a,b)=>b[1]-a[1]);
+    const domNY=nyMap[0]?nyMap[0][0]:'—';
+    const aRR=avg(rrs), aQ=avg(quals);
+    const grade=freq>=60&&(aRR??0)>=3&&g.length>=10?'A':freq>=45&&(aRR??0)>=2&&g.length>=5?'B':g.length>=3?'C':'N';
+    return{p,n:g.length,ws:ws.length,freq,avgRR:aRR,avgQ:aQ,domDir,topType,domNY,grade};
   }).filter(Boolean);
 
-  [...new Set(data.map(r=>r['Pattern Tag']))].forEach((p,i)=>{
-    if(!PATS.includes(p)&&p){
-      const g=data.filter(r=>r['Pattern Tag']===p);
-      const ws=g.filter(r=>r['Setup Appeared']==='Yes');
-      const freq=pct(ws.length,g.length);
-      const rrs=ws.filter(r=>parseFloat(r['Potential RR'])>0).map(r=>parseFloat(r['Potential RR']));
-      const quals=ws.filter(r=>parseFloat(r['Setup Quality (1-5)'])>0).map(r=>parseFloat(r['Setup Quality (1-5)']));
-      rows.push({p,n:g.length,ws:ws.length,freq,avgRR:avg(rrs),avgQ:avg(quals),dominantDir:'—',topType:'—',dominantNY:'—',grade:'N',longs:0,shorts:0});
-    }
-  });
-
   rows.sort((a,b)=>{
-    let av=a[sCol]??-999,bv=b[sCol]??-999;
-    if(typeof av==='string')return av.localeCompare(bv)*sDir;
-    return(bv-av)*sDir;
+    let av=a[sCol]??-999, bv=b[sCol]??-999;
+    if(typeof av==='string') return av.localeCompare(bv)*sDir;
+    return (bv-av)*sDir;
   });
 
-  if(!rows.length){document.getElementById('ptbl').innerHTML='<div class="nodata">No data yet. Add sessions to the CSV.</div>';return;}
+  if(!rows.length){ document.getElementById('ptbl').innerHTML='<div class="nodata">No data yet — add sessions to backtest_log.csv.</div>'; return; }
+
   const bc=g=>({A:'ba',B:'bb',C:'bc',N:'bn'}[g]);
   const ar=c=>`<span class="sa${sCol===c?' on':''}">${sCol===c&&sDir===1?'↑':'↓'}</span>`;
   const dirTag=d=>d==='Long'?`<span class="tag tg">↑ Long</span>`:d==='Short'?`<span class="tag tr">↓ Short</span>`:`<span class="tag tn">${d}</span>`;
@@ -717,40 +884,54 @@ function buildPatternTable(data){
       <th onclick="sortT('freq')">Freq ${ar('freq')}</th>
       <th onclick="sortT('avgRR')">Avg R:R ${ar('avgRR')}</th>
       <th onclick="sortT('avgQ')">Avg quality ${ar('avgQ')}</th>
-      <th onclick="sortT('dominantDir')">Direction ${ar('dominantDir')}</th>
+      <th onclick="sortT('domDir')">Direction ${ar('domDir')}</th>
       <th>Top entry</th>
       <th>NY reaction</th>
       <th onclick="sortT('grade')">Grade ${ar('grade')}</th>
     </tr></thead>
     <tbody>${rows.map(r=>`<tr>
-      <td style="font-weight:500;max-width:220px">${r.p}</td>
-      <td>${r.n}<span style="color:var(--hint);font-size:10px"> (${r.ws} setup${r.ws!==1?'s':''})</span></td>
-      <td><span style="font-weight:700;color:${r.freq>=60?'var(--green)':r.freq>=40?'var(--amber)':'var(--red)'}">${r.freq}%</span></td>
-      <td style="font-weight:600;color:${r.avgRR>=3?'var(--green)':r.avgRR>=2?'var(--amber)':'var(--sub)'}">${r.avgRR!=null?r.avgRR+'R':'—'}</td>
-      <td style="font-weight:600;color:${r.avgQ>=4?'var(--green)':r.avgQ>=3?'var(--amber)':'var(--sub)'}">${r.avgQ!=null?r.avgQ+'/5':'—'}</td>
-      <td>${dirTag(r.dominantDir)}</td>
+      <td style="font-weight:500">${r.p}</td>
+      <td>${r.n}<span style="color:var(--text3);font-size:12px">&nbsp;(${r.ws} setup${r.ws!==1?'s':''})</span></td>
+      <td><span style="font-size:13px;font-weight:700;color:${r.freq>=60?'var(--green)':r.freq>=40?'var(--amber)':'var(--red)'}">${r.freq}%</span></td>
+      <td style="font-weight:600;font-size:13px;color:${r.avgRR>=3?'var(--green)':r.avgRR>=2?'var(--amber)':'var(--text3)'}">${r.avgRR!=null?r.avgRR+'R':'—'}</td>
+      <td style="font-weight:600;font-size:13px;color:${r.avgQ>=4?'var(--green)':r.avgQ>=3?'var(--amber)':'var(--text3)'}">${r.avgQ!=null?r.avgQ+'/5':'—'}</td>
+      <td>${dirTag(r.domDir)}</td>
       <td><span class="tag tb">${r.topType}</span></td>
-      <td>${nyTag(r.dominantNY)}</td>
+      <td>${nyTag(r.domNY)}</td>
       <td><span class="bdg ${bc(r.grade)}">${r.grade}</span></td>
     </tr>`).join('')}
     </tbody>
   </table>
-  <div class="csub" style="margin-top:10px">Grade A = freq ≥60% + avg R:R ≥3R + ≥10 obs &nbsp;·&nbsp; B = freq ≥45% + R:R ≥2R + ≥5 obs &nbsp;·&nbsp; C = enough data, not yet A/B &nbsp;·&nbsp; N = insufficient data</div>`;
+  <div class="csub" style="margin-top:10px">
+    Grade A&nbsp;= freq ≥60% + avg R:R ≥3R + ≥10 obs &ensp;·&ensp;
+    B&nbsp;= freq ≥45% + R:R ≥2R + ≥5 obs &ensp;·&ensp;
+    C&nbsp;= some data, not yet A/B &ensp;·&ensp;
+    N&nbsp;= insufficient data (&lt;3 obs)
+  </div>`;
 }
 
-function sortT(c){if(sCol===c)sDir*=-1;else{sCol=c;sDir=-1;}buildPatternTable(filtered());}
+function sortT(c){ if(sCol===c) sDir*=-1; else{ sCol=c; sDir=-1; } buildPatternTable(filtered()); }
 
-/* ── INIT ───────────────────────────── */
+/* ─── Set initial theme-btn icon ─────────── */
+function initThemeBtn(){
+  const dark = document.documentElement.classList.contains('dark');
+  document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+}
+
+/* ─── Init ──────────────────────────────── */
 Papa.parse(CSV,{
-  download:true,header:true,skipEmptyLines:true,
+  download:true, header:true, skipEmptyLines:true,
   complete(res){
-    if(!res.data.length){document.getElementById('app').innerHTML='<div class="errbox">No data found in backtest_log.csv.</div>';return;}
-    ALL=res.data;
-    const dates=ALL.map(r=>r['Session Date']).filter(Boolean).sort();
-    document.getElementById('last-upd').innerHTML=`<span class="dot"></span>${ALL.length} sessions &middot; ${dates[0]||'—'} → ${dates[dates.length-1]||'—'}`;
+    if(!res.data.length){ document.getElementById('app').innerHTML='<div class="errbox">No data found in backtest_log.csv.</div>'; return; }
+    ALL = res.data;
+    const dates = ALL.map(r=>r['Session Date']).filter(Boolean).sort();
+    document.getElementById('last-upd').innerHTML =
+      `<span class="dot"></span>${ALL.length} sessions &middot; ${dates[0]||'—'} → ${dates[dates.length-1]||'—'}`;
+    updateChartDefaults();
+    initThemeBtn();
     render();
   },
-  error(err){document.getElementById('app').innerHTML=`<div class="errbox">Could not load backtest_log.csv: ${err.message||err}</div>`;}
+  error(err){ document.getElementById('app').innerHTML=`<div class="errbox">Could not load backtest_log.csv: ${err.message||err}</div>`; }
 });
 </script>
 </body>
