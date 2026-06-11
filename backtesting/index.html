@@ -301,9 +301,144 @@ html.light .cc { color:#7f1d1d }
 .errbox      { background:var(--red2); color:var(--red); border:1px solid rgba(224,92,92,.22); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1rem; font-size:13px }
 .divider     { height:1px; background:var(--border); margin:1.25rem 0 }
 
-/* ── RESPONSIVE ──────────────────────── */
-@media(max-width:900px){ .c3,.c4{grid-template-columns:1fr 1fr} .c32{grid-template-columns:1fr} }
-@media(max-width:600px){ main{padding:1rem} #hdr,#fbar{padding-left:1rem;padding-right:1rem} .c2,.c3,.c4{grid-template-columns:1fr} #fbar{flex-direction:column;align-items:flex-start} .fdate{width:116px} }
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   Breakpoints: 1024 tablet-land · 768 tablet
+                480 large-phone · 380 phone
+══════════════════════════════════════════ */
+
+/* ── Tablet landscape ≤1024px ── */
+@media(max-width:1024px){
+  .c4  { grid-template-columns:1fr 1fr }
+  .c3  { grid-template-columns:1fr 1fr }
+  .c32 { grid-template-columns:1fr }
+}
+
+/* ── Tablet ≤768px ── */
+@media(max-width:768px){
+  main { padding:1.25rem 1rem 4rem }
+  #hdr { padding:.7rem 1rem }
+  #fbar{ padding:.5rem 1rem }
+  .pill-bar { padding:.35rem 1rem }
+
+  /* header: hide subtitle on small tablets */
+  .hdr-sub { display:none }
+  /* shrink last-updated */
+  #last-upd { font-size:11px; padding:3px 9px }
+
+  /* filter bar: wrap neatly into two rows */
+  #fbar { gap:8px }
+  .fsep { display:none }
+  .fg   { flex-wrap:wrap; gap:5px }
+  .fsel { font-size:12px; height:32px }
+  .fdate{ width:120px; font-size:12px; height:32px }
+  .pb   { font-size:11.5px; padding:4px 8px; height:28px }
+
+  /* grids */
+  .c2  { grid-template-columns:1fr 1fr }
+  .c4  { grid-template-columns:1fr 1fr }
+  .c3  { grid-template-columns:1fr 1fr }
+
+  /* KPI: smaller value text */
+  .kpi-val { font-size:26px }
+  .kpi     { padding:.9rem 1rem }
+
+  /* chart heights: reduce on tablet */
+  .ch-tall  { height:220px !important }
+  .ch-med   { height:170px !important }
+  .ch-short { height:150px !important }
+
+  /* data table: allow horizontal scroll */
+  .dtbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch }
+  .dtbl { min-width:640px }
+
+  /* heatmap: already overflow-x:auto, just ensure min-width */
+  .hmt { min-width:420px }
+}
+
+/* ── Large phone ≤480px ── */
+@media(max-width:480px){
+  main { padding:1rem .75rem 3.5rem }
+  #hdr { padding:.65rem .75rem }
+  #fbar{ padding:.45rem .75rem; gap:6px }
+  .pill-bar { padding:.3rem .75rem }
+
+  /* header */
+  .hdr-title { font-size:13.5px }
+  .hdr-logo  { width:30px; height:30px; font-size:14px }
+  #last-upd  { display:none } /* hide on small — space too tight */
+  #theme-btn { width:30px; height:30px; font-size:14px }
+
+  /* filter bar: full-width selects in two columns */
+  #fbar { flex-direction:column; align-items:stretch }
+  .fg   { width:100%; flex-wrap:wrap; gap:5px }
+  .fl   { width:100%; margin-bottom:0 }
+  .presets { flex-wrap:wrap; gap:3px }
+  .fsel,.fdate { flex:1; min-width:0; font-size:12px; height:36px }
+  .fdate { width:auto }
+
+  /* stacked single column for everything */
+  .c2,.c3,.c4 { grid-template-columns:1fr }
+
+  /* KPI: side-by-side 2-column compact cards */
+  .kpi-grid-wrap { display:grid; grid-template-columns:1fr 1fr; gap:8px }
+  .kpi-ico   { font-size:16px; margin-bottom:5px }
+  .kpi-val   { font-size:24px }
+  .kpi-lbl   { font-size:11px }
+  .kpi-hint  { font-size:11.5px }
+  .kpi       { padding:.8rem .85rem }
+
+  /* cards */
+  .card { padding:1rem .9rem }
+  .ct   { font-size:12.5px }
+
+  /* chart heights: mobile-optimised */
+  .ch-tall  { height:200px !important }
+  .ch-med   { height:160px !important }
+  .ch-short { height:140px !important }
+
+  /* section labels */
+  .slbl { font-size:11px }
+
+  /* pattern table: horizontal scroll, compact */
+  .dtbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch }
+  .dtbl { min-width:560px; font-size:12px }
+  .dtbl th { font-size:11px; padding:7px 10px }
+  .dtbl td { padding:8px 10px; font-size:12px }
+
+  /* heatmap */
+  .hmt { min-width:380px; font-size:11.5px }
+
+  /* direction bias ring: shrink */
+  .ring-svg { width:120px !important; height:120px !important }
+
+  /* legend: smaller */
+  .leg { font-size:12px; gap:5px }
+}
+
+/* ── Small phone ≤380px ── */
+@media(max-width:380px){
+  main { padding:.85rem .6rem 3rem }
+  #hdr { padding:.6rem }
+  #fbar{ padding:.4rem .6rem }
+
+  .hdr-title { font-size:12.5px }
+  .kpi-val   { font-size:22px }
+  .kpi-grid-wrap { grid-template-columns:1fr 1fr; gap:6px }
+
+  .fsel,.fdate { height:34px; font-size:11.5px }
+  .pb { font-size:11px; padding:3px 7px; height:26px }
+
+  .dtbl { min-width:500px }
+  .hmt  { min-width:340px }
+}
+
+/* ── Touch targets ── */
+@media(hover:none){
+  .fsel,.fdate,.pb { min-height:40px }
+  .pill { min-height:34px; padding:5px 12px 5px 10px }
+  #theme-btn { width:38px; height:38px }
+}
 </style>
 </head>
 <body>
@@ -540,7 +675,7 @@ function render(){
 
   document.getElementById('app').innerHTML = `
 <!-- ① KPIs -->
-<div class="row c4 mb">
+<div class="kpi-grid-wrap row c4 mb">
   <div class="kpi">
     <div class="kpi-stripe" style="background:var(--accent)"></div>
     <div class="kpi-ico">📅</div>
@@ -582,7 +717,7 @@ function render(){
       <span class="ct-sub">% of days the pattern appeared</span>
     </div>
     <div class="leg" id="leg-p"></div>
-    <div class="cw" style="height:260px"><canvas id="c-p"></canvas></div>
+    <div class="cw ch-tall" style="height:260px"><canvas id="c-p"></canvas></div>
   </div>
   <div class="card">
     <div class="ct">Setup direction bias</div>
@@ -622,7 +757,7 @@ function render(){
     What R:R does each pattern offer on average?
     <span class="ct-sub">when a valid setup appeared</span>
   </div>
-  <div class="cw" style="height:240px"><canvas id="c-rr"></canvas></div>
+  <div class="cw ch-tall" style="height:240px"><canvas id="c-rr"></canvas></div>
 </div>
 
 <!-- ④ Kill zone heatmap -->
@@ -643,23 +778,23 @@ function render(){
 <div class="row c4 mb">
   <div class="card">
     <div class="ct" style="font-size:12.5px">Setup freq by day</div>
-    <div class="cw" style="height:160px"><canvas id="c-day"></canvas></div>
+    <div class="cw ch-short" style="height:160px"><canvas id="c-day"></canvas></div>
     <div class="csub">Which weekday is most productive?</div>
   </div>
   <div class="card">
     <div class="ct" style="font-size:12.5px">News day impact</div>
-    <div class="cw" style="height:160px"><canvas id="c-news"></canvas></div>
+    <div class="cw ch-short" style="height:160px"><canvas id="c-news"></canvas></div>
     <div class="csub">Does news suppress or amplify setups?</div>
   </div>
   <div class="card">
     <div class="ct" style="font-size:12.5px">HTF alignment</div>
-    <div class="cw" style="height:160px"><canvas id="c-htf"></canvas></div>
+    <div class="cw ch-short" style="height:160px"><canvas id="c-htf"></canvas></div>
     <div class="csub">Setup freq with vs without HTF narrative</div>
   </div>
   <div class="card">
     <div class="ct" style="font-size:12.5px">Entry type distribution</div>
     <div class="leg" id="leg-et" style="margin-bottom:6px"></div>
-    <div class="cw" style="height:130px"><canvas id="c-et"></canvas></div>
+    <div class="cw ch-short" style="height:130px"><canvas id="c-et"></canvas></div>
     <div class="csub">Which structure appears most at entry</div>
   </div>
 </div>
@@ -671,7 +806,7 @@ function render(){
     All patterns — full statistical breakdown
     <span class="ct-sub">click column headers to sort</span>
   </div>
-  <div id="ptbl"></div>
+  <div class="dtbl-wrap" id="ptbl"></div>
 </div>`;
 
   buildKPIRing(S.freqPct, freqC);
@@ -870,6 +1005,7 @@ function buildPatternTable(data){
   const nyTag=n=>n==='Reversal'?`<span class="tag tg">Reversal</span>`:n==='Continuation'?`<span class="tag tb">Continuation</span>`:n==='Chop'?`<span class="tag tn">Chop</span>`:`<span class="tag tn">${n}</span>`;
 
   document.getElementById('ptbl').innerHTML=`
+  <div class="dtbl-wrap">
   <table class="dtbl">
     <thead><tr>
       <th onclick="sortT('p')">Pattern ${ar('p')}</th>
@@ -895,6 +1031,7 @@ function buildPatternTable(data){
     </tr>`).join('')}
     </tbody>
   </table>
+  </div>
   <div class="csub" style="margin-top:10px">
     Grade A&nbsp;= freq ≥60% + avg R:R ≥3R + ≥10 obs &ensp;·&ensp;
     B&nbsp;= freq ≥45% + R:R ≥2R + ≥5 obs &ensp;·&ensp;
